@@ -38,6 +38,8 @@ pub type SideStacks {
 
 pub type Deck
 
+pub type ShuffledDeck
+
 pub type Player
 
 pub type Game {
