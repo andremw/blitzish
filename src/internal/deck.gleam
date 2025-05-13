@@ -3,21 +3,8 @@ pub type Gender {
   Girl
 }
 
-pub type Number {
-  One
-  Two
-  Three
-  Four
-  Five
-  Six
-  Seven
-  Eight
-  Nine
-  Ten
-}
-
 pub type Card {
-  Card(gender: Gender, number: Number)
+  Card(gender: Gender, number: Int)
 }
 
 // TODO: make it opaque so the list doesn't leak out of the module
