@@ -2,7 +2,7 @@ import gleam/result
 import gleeunit
 import internal/deck.{Card}
 import internal/side_pile.{
-  NotPreviousNumber, SameGender, get_top_card, place_card,
+  CantPlaceOver1, NotPreviousNumber, SameGender, get_top_card, place_card,
 }
 
 import gleeunit/should
@@ -64,6 +64,16 @@ pub fn does_not_place_same_gender_card_test() {
   pile
   |> should.equal(Error(SameGender))
 }
-// pub fn does_not_place_card_on_top_of_1_test() {
-//   todo
-// }
+
+pub fn does_not_place_card_on_top_of_1_test() {
+  let pile =
+    side_pile.new()
+    |> place_card(Card(color: deck.Blue, deck_design: deck.First, number: 1))
+    |> result.try(place_card(
+      _,
+      Card(color: deck.Yellow, deck_design: deck.First, number: 0),
+    ))
+
+  pile
+  |> should.equal(Error(CantPlaceOver1))
+}
