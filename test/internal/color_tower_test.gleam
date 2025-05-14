@@ -1,7 +1,7 @@
 import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
-import internal/color_tower
+import internal/color_tower.{DescendingNotAllowed}
 import internal/deck.{Card}
 
 pub fn main() {
@@ -35,7 +35,13 @@ pub fn places_ascending_cards_test() {
 }
 
 pub fn does_not_place_descending_card_test() {
-  1 |> should.equal(1)
+  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let tower = color_tower.new([card5])
+
+  let card_4 = Card(color: deck.Blue, gender: deck.Boy, number: 4)
+
+  color_tower.place_card(tower, card_4)
+  |> should.equal(Error(DescendingNotAllowed))
 }
 
 pub fn does_not_place_different_color_card_test() {
