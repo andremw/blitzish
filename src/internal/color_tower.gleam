@@ -8,9 +8,8 @@ pub opaque type ColorTower {
   ColorTower(cards: List(Card))
 }
 
-// TODO: remove. tower should be initialized with empty cards list
-pub fn new(cards) {
-  ColorTower(cards)
+pub fn new() {
+  ColorTower([])
 }
 
 /// Gets the card from the top of the tower.

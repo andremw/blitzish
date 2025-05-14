@@ -1,3 +1,4 @@
+import gleam/list
 import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
@@ -9,7 +10,7 @@ pub fn main() {
 }
 
 pub fn places_card_when_empty_test() {
-  let tower = color_tower.new([])
+  let tower = color_tower.new()
   let card5 =
     Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
 
@@ -23,9 +24,14 @@ pub fn places_card_when_empty_test() {
 
 // gleeunit test functions end in `_test`
 pub fn places_ascending_cards_test() {
-  let card5 =
-    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
-  let tower = color_tower.new([card5])
+  let assert Ok(tower) =
+    color_tower.new()
+    |> color_tower.place_card(Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 5,
+      deck_design: deck.First,
+    ))
 
   let new_card =
     Card(color: deck.Blue, gender: deck.Boy, number: 6, deck_design: deck.First)
@@ -38,9 +44,14 @@ pub fn places_ascending_cards_test() {
 }
 
 pub fn does_not_place_descending_card_test() {
-  let card5 =
-    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
-  let tower = color_tower.new([card5])
+  let assert Ok(tower) =
+    color_tower.new()
+    |> color_tower.place_card(Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 5,
+      deck_design: deck.First,
+    ))
 
   let card_4 =
     Card(color: deck.Blue, gender: deck.Boy, number: 4, deck_design: deck.First)
@@ -50,9 +61,14 @@ pub fn does_not_place_descending_card_test() {
 }
 
 pub fn does_not_place_card_that_is_not_next_number_test() {
-  let card5 =
-    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
-  let tower = color_tower.new([card5])
+  let assert Ok(tower) =
+    color_tower.new()
+    |> color_tower.place_card(Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 5,
+      deck_design: deck.First,
+    ))
 
   let card_10 =
     Card(
@@ -67,9 +83,14 @@ pub fn does_not_place_card_that_is_not_next_number_test() {
 }
 
 pub fn does_not_place_different_color_card_test() {
-  let blue_card =
-    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
-  let tower = color_tower.new([blue_card])
+  let assert Ok(tower) =
+    color_tower.new()
+    |> color_tower.place_card(Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 5,
+      deck_design: deck.First,
+    ))
 
   let green_card =
     Card(
@@ -84,69 +105,59 @@ pub fn does_not_place_different_color_card_test() {
 }
 
 pub fn calculates_total_points_for_each_deck_design_test() {
-  let tower =
-    color_tower.new([
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 1,
-        deck_design: deck.First,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 2,
-        deck_design: deck.Second,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 3,
-        deck_design: deck.Second,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 4,
-        deck_design: deck.Second,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 5,
-        deck_design: deck.Third,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 6,
-        deck_design: deck.First,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 7,
-        deck_design: deck.First,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 8,
-        deck_design: deck.Fourth,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 9,
-        deck_design: deck.Second,
-      ),
-      Card(
-        color: deck.Blue,
-        gender: deck.Boy,
-        number: 10,
-        deck_design: deck.Second,
-      ),
-    ])
+  let tower = color_tower.new()
+  // we want to add all cards to the new tower, from 1 to 10
+  let cards = [
+    Card(color: deck.Blue, gender: deck.Boy, number: 1, deck_design: deck.First),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 2,
+      deck_design: deck.Second,
+    ),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 3,
+      deck_design: deck.Second,
+    ),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 4,
+      deck_design: deck.Second,
+    ),
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.Third),
+    Card(color: deck.Blue, gender: deck.Boy, number: 6, deck_design: deck.First),
+    Card(color: deck.Blue, gender: deck.Boy, number: 7, deck_design: deck.First),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 8,
+      deck_design: deck.Fourth,
+    ),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 9,
+      deck_design: deck.Second,
+    ),
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 10,
+      deck_design: deck.Second,
+    ),
+  ]
+
+  // here we map the cards, accumulating the value in the first element of the tuple #(tower, Nil)
+  // (we return Nil as the second element because map_fold requires a tuple, and we don't care about the second value).
+  // using map alone would end up in a list of different towers
+  let #(tower, _) =
+    list.map_fold(over: cards, from: tower, with: fn(tower, card) {
+      let assert Ok(tower) = color_tower.place_card(tower, card)
+      #(tower, Nil)
+    })
 
   let assert Ok(totals) = color_tower.calculate_total(tower)
 
