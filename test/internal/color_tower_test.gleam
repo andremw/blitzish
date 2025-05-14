@@ -44,6 +44,16 @@ pub fn does_not_place_descending_card_test() {
   |> should.equal(Error(NotNextNumber))
 }
 
+pub fn does_not_place_card_that_is_not_next_number_test() {
+  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let tower = color_tower.new([card5])
+
+  let card_10 = Card(color: deck.Blue, gender: deck.Boy, number: 10)
+
+  color_tower.place_card(tower, card_10)
+  |> should.equal(Error(NotNextNumber))
+}
+
 pub fn does_not_place_different_color_card_test() {
   let blue_card = Card(color: deck.Blue, gender: deck.Boy, number: 5)
   let tower = color_tower.new([blue_card])
