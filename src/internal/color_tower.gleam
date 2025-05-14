@@ -21,8 +21,8 @@ pub fn get_top_card(tower) {
 }
 
 pub type PlacementError {
-  DescendingNotAllowed
   ColorMismatch
+  NotNextNumber
 }
 
 /// Tries to place a card on top of the ColorTower.
@@ -34,7 +34,7 @@ pub type PlacementError {
 ///
 /// ```gleam
 /// Error(ColorMismatch)
-/// Error(DescendingNotAllowed)
+/// Error(NotNextNumber)
 /// ```
 pub fn place_card(tower: ColorTower, card) {
   case tower {
@@ -43,9 +43,12 @@ pub fn place_card(tower: ColorTower, card) {
       // we know cards list is not empty
       let assert Ok(top_card) = list.last(cards)
 
-      case card.number > top_card.number, card.color == top_card.color {
+      let is_next_number = card.number == top_card.number + 1
+      let colors_match = card.color == top_card.color
+
+      case is_next_number, colors_match {
         True, True -> cards |> list.append([card]) |> ColorTower |> Ok
-        False, _ -> Error(DescendingNotAllowed)
+        False, _ -> Error(NotNextNumber)
         _, False -> Error(ColorMismatch)
       }
     }
