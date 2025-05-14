@@ -150,13 +150,9 @@ pub fn calculates_total_points_for_each_deck_design_test() {
     ),
   ]
 
-  // here we map the cards, accumulating the value in the first element of the tuple #(tower, Nil)
-  // (we return Nil as the second element because map_fold requires a tuple, and we don't care about the second value).
-  // using map alone would end up in a list of different towers
-  let #(tower, _) =
-    list.map_fold(over: cards, from: tower, with: fn(tower, card) {
-      let assert Ok(tower) = color_tower.place_card(tower, card)
-      #(tower, Nil)
+  let assert Ok(tower) =
+    list.try_fold(over: cards, from: tower, with: fn(tower, card) {
+      color_tower.place_card(tower, card)
     })
 
   let assert Ok(totals) = color_tower.calculate_total(tower)
