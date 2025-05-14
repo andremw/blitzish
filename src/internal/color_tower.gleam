@@ -1,14 +1,23 @@
 import gleam/list
+import gleam/option.{None}
 import internal/deck.{type Card}
 
-// TODO: make it opaque so the list doesn't leak out of the module
-pub type ColorTower {
+pub opaque type ColorTower {
   /// The tower of cards that every player can add cards to, in ASCENDING order, from 1 to 10.
   ColorTower(cards: List(Card))
 }
 
 pub fn new(cards) {
   ColorTower(cards)
+}
+
+/// Gets the card from the top of the tower.
+/// Returns None if the tower is empty.
+pub fn get_top_card(tower) {
+  case tower {
+    ColorTower([]) -> None
+    ColorTower(cards) -> cards |> list.last |> option.from_result
+  }
 }
 
 pub type PlacementError {
