@@ -10,7 +10,8 @@ pub fn main() {
 
 pub fn places_card_when_empty_test() {
   let tower = color_tower.new([])
-  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let card5 =
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
 
   let assert Ok(new_tower) = color_tower.place_card(tower, card5)
 
@@ -22,10 +23,12 @@ pub fn places_card_when_empty_test() {
 
 // gleeunit test functions end in `_test`
 pub fn places_ascending_cards_test() {
-  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let card5 =
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
   let tower = color_tower.new([card5])
 
-  let new_card = Card(color: deck.Blue, gender: deck.Boy, number: 6)
+  let new_card =
+    Card(color: deck.Blue, gender: deck.Boy, number: 6, deck_design: deck.First)
 
   let assert Ok(new_tower) = color_tower.place_card(tower, new_card)
   let assert Some(placed_card) = color_tower.get_top_card(new_tower)
@@ -35,30 +38,46 @@ pub fn places_ascending_cards_test() {
 }
 
 pub fn does_not_place_descending_card_test() {
-  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let card5 =
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
   let tower = color_tower.new([card5])
 
-  let card_4 = Card(color: deck.Blue, gender: deck.Boy, number: 4)
+  let card_4 =
+    Card(color: deck.Blue, gender: deck.Boy, number: 4, deck_design: deck.First)
 
   color_tower.place_card(tower, card_4)
   |> should.equal(Error(NotNextNumber))
 }
 
 pub fn does_not_place_card_that_is_not_next_number_test() {
-  let card5 = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let card5 =
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
   let tower = color_tower.new([card5])
 
-  let card_10 = Card(color: deck.Blue, gender: deck.Boy, number: 10)
+  let card_10 =
+    Card(
+      color: deck.Blue,
+      gender: deck.Boy,
+      number: 10,
+      deck_design: deck.First,
+    )
 
   color_tower.place_card(tower, card_10)
   |> should.equal(Error(NotNextNumber))
 }
 
 pub fn does_not_place_different_color_card_test() {
-  let blue_card = Card(color: deck.Blue, gender: deck.Boy, number: 5)
+  let blue_card =
+    Card(color: deck.Blue, gender: deck.Boy, number: 5, deck_design: deck.First)
   let tower = color_tower.new([blue_card])
 
-  let green_card = Card(color: deck.Green, gender: deck.Boy, number: 6)
+  let green_card =
+    Card(
+      color: deck.Green,
+      gender: deck.Boy,
+      number: 6,
+      deck_design: deck.First,
+    )
 
   color_tower.place_card(tower, green_card)
   |> should.equal(Error(ColorMismatch))
