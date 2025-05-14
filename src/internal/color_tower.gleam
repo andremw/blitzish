@@ -62,6 +62,8 @@ pub type CalculationError {
 
 /// Calculates the total for each deck design, each belonging to a single player.
 /// Returns Error(EmptyTower) if the tower is empty.
+///
+/// This will be used to calculate the points from each tower in a hand (or round) once the hand finishes.
 pub fn calculate_total(tower: ColorTower) {
   case tower {
     ColorTower(cards: []) -> Error(EmptyTower)
