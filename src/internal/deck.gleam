@@ -10,6 +10,13 @@ pub type Color {
   Green
 }
 
+pub fn get_gender(color) {
+  case color {
+    Red | Blue -> Boy
+    Green | Yellow -> Girl
+  }
+}
+
 pub type Card {
   // TODO: remove gender, as its inferred by the color
   Card(gender: Gender, number: Int, color: Color, deck_design: DeckDesign)
