@@ -1,3 +1,4 @@
+import gleam/dict
 import gleam/list
 import gleam/option.{None}
 import internal/deck.{type Card}
@@ -7,6 +8,7 @@ pub opaque type ColorTower {
   ColorTower(cards: List(Card))
 }
 
+// TODO: remove. tower should be initialized with empty cards list
 pub fn new(cards) {
   ColorTower(cards)
 }
@@ -52,5 +54,23 @@ pub fn place_card(tower: ColorTower, card) {
         _, False -> Error(ColorMismatch)
       }
     }
+  }
+}
+
+pub type CalculationError {
+  EmptyTower
+}
+
+/// Calculates the total for each deck design, each belonging to a single player.
+/// Returns Error(EmptyTower) if the tower is empty.
+pub fn calculate_total(tower: ColorTower) {
+  case tower {
+    ColorTower(cards: []) -> Error(EmptyTower)
+    ColorTower(cards) ->
+      cards
+      |> list.group(fn(card) { card.deck_design })
+      |> dict.map_values(fn(_design, cards) { list.length(cards) })
+      |> dict.to_list
+      |> Ok
   }
 }

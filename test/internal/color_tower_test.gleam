@@ -82,3 +82,79 @@ pub fn does_not_place_different_color_card_test() {
   color_tower.place_card(tower, green_card)
   |> should.equal(Error(ColorMismatch))
 }
+
+pub fn calculates_total_points_for_each_deck_design_test() {
+  let tower =
+    color_tower.new([
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 1,
+        deck_design: deck.First,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 2,
+        deck_design: deck.Second,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 3,
+        deck_design: deck.Second,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 4,
+        deck_design: deck.Second,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 5,
+        deck_design: deck.Third,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 6,
+        deck_design: deck.First,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 7,
+        deck_design: deck.First,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 8,
+        deck_design: deck.Fourth,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 9,
+        deck_design: deck.Second,
+      ),
+      Card(
+        color: deck.Blue,
+        gender: deck.Boy,
+        number: 10,
+        deck_design: deck.Second,
+      ),
+    ])
+
+  let assert Ok(totals) = color_tower.calculate_total(tower)
+
+  totals
+  |> should.equal([
+    #(deck.First, 3),
+    #(deck.Second, 5),
+    #(deck.Third, 1),
+    #(deck.Fourth, 1),
+  ])
+}
