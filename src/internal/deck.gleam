@@ -10,6 +10,9 @@ pub type Color {
   Green
 }
 
+/// Gets the gender related to the color.
+/// For Red and Blue, it returns Boy.
+/// For Green and Yellow, it returns Girl.
 pub fn get_gender(color) {
   case color {
     Red | Blue -> Boy
