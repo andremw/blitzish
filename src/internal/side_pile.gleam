@@ -1,3 +1,4 @@
+import gleam/bool.{guard}
 import gleam/list
 import internal/deck.{type Card}
 
@@ -16,29 +17,29 @@ pub type PlacementError {
 }
 
 pub fn place_card(pile: SidePile, card) {
-  case pile.cards {
-    [] -> Ok(SidePile(list.append(pile.cards, [card])))
-    cards -> {
-      let assert Ok(top_card) = list.last(cards)
+  use <- guard(
+    when: list.is_empty(pile.cards),
+    return: Ok(SidePile(list.append(pile.cards, [card]))),
+  )
 
-      let is_1_the_top_card = top_card.number == 1
+  let assert Ok(top_card) = list.last(pile.cards)
 
-      let is_new_card_number_the_previous = card.number == top_card.number - 1
-      let is_different_gender =
-        deck.get_gender(top_card.color) != deck.get_gender(card.color)
+  let is_1_the_top_card = top_card.number == 1
+  use <- guard(when: is_1_the_top_card, return: Error(CantPlaceOver1))
 
-      case
-        is_1_the_top_card,
-        is_new_card_number_the_previous,
-        is_different_gender
-      {
-        False, True, True -> Ok(SidePile(list.append(pile.cards, [card])))
-        True, _, _ -> Error(CantPlaceOver1)
-        _, False, _ -> Error(NotPreviousNumber)
-        _, _, False -> Error(SameGender)
-      }
-    }
-  }
+  let is_new_card_number_the_previous = card.number == top_card.number - 1
+
+  use <- guard(
+    when: !is_new_card_number_the_previous,
+    return: Error(NotPreviousNumber),
+  )
+
+  let is_different_gender =
+    deck.get_gender(top_card.color) != deck.get_gender(card.color)
+
+  use <- guard(when: !is_different_gender, return: Error(SameGender))
+
+  Ok(SidePile(list.append(pile.cards, [card])))
 }
 
 pub fn get_top_card(pile: SidePile) {
