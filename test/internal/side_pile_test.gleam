@@ -1,14 +1,25 @@
 import gleeunit
+import internal/deck
+import internal/side_pile.{get_top_card, place_card}
 
-// import gleeunit/should
+import gleeunit/should
 
 pub fn main() {
   gleeunit.main()
 }
-// pub fn places_card_when_empty_test() {
-//   todo
-// }
 
+pub fn places_card_when_empty_test() {
+  let card = deck.Card(color: deck.Blue, deck_design: deck.First, number: 5)
+
+  let pile =
+    side_pile.new()
+    |> place_card(card)
+
+  let assert Ok(top_card) = get_top_card(pile)
+
+  top_card
+  |> should.equal(card)
+}
 // pub fn places_descending_card_test() {
 //   todo
 // }
