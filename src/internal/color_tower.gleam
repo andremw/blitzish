@@ -22,6 +22,7 @@ pub fn get_top_card(tower) {
 
 pub type PlacementError {
   DescendingNotAllowed
+  ColorMismatch
 }
 
 /// Tries to place a card on top of the ColorTower.
@@ -42,9 +43,10 @@ pub fn place_card(tower: ColorTower, card) {
       // we know cards list is not empty
       let assert Ok(top_card) = list.last(cards)
 
-      case card.number > top_card.number {
-        False -> Error(DescendingNotAllowed)
-        True -> cards |> list.append([card]) |> ColorTower |> Ok
+      case card.number > top_card.number, card.color == top_card.color {
+        True, True -> cards |> list.append([card]) |> ColorTower |> Ok
+        False, _ -> Error(DescendingNotAllowed)
+        _, False -> Error(ColorMismatch)
       }
     }
   }
