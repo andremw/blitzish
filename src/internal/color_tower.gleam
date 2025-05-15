@@ -26,6 +26,7 @@ pub type PlacementError {
   ColorMismatch
   NotNextNumber
   CantPlaceOver10
+  FirstCardMustBe1
 }
 
 /// Tries to place a card on top of the ColorTower.
@@ -39,9 +40,12 @@ pub type PlacementError {
 /// Error(ColorMismatch)
 /// Error(NotNextNumber)
 /// ```
-pub fn place_card(tower: ColorTower, card) {
+pub fn place_card(tower: ColorTower, card: Card) {
   case tower {
-    ColorTower(cards: []) -> Ok(ColorTower([card]))
+    ColorTower(cards: []) -> {
+      use <- guard(when: card.number != 1, return: Error(FirstCardMustBe1))
+      Ok(ColorTower([card]))
+    }
     ColorTower(cards) -> {
       // we know cards list is not empty
       let assert Ok(top_card) = list.last(cards)
