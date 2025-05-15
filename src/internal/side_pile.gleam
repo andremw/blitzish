@@ -1,13 +1,14 @@
 import gleam/bool.{guard}
-import gleam/list
+import gleam/option
 import internal/deck.{type Card}
+import internal/naive_stack.{type NaiveStack}
 
 pub opaque type SidePile {
-  SidePile(cards: List(Card))
+  SidePile(cards: NaiveStack(Card))
 }
 
 pub fn new() {
-  SidePile(cards: [])
+  SidePile(cards: naive_stack.from_list([]))
 }
 
 pub type PlacementError {
@@ -17,28 +18,32 @@ pub type PlacementError {
 }
 
 pub fn place_card(pile: SidePile, card) {
-  use <- guard(when: list.is_empty(pile.cards), return: Ok(SidePile([card])))
+  let top_card = get_top_card(pile)
 
-  let assert Ok(top_card) = list.first(pile.cards)
+  case top_card {
+    option.None -> naive_stack.from_list([card]) |> SidePile |> Ok
+    option.Some(top_card) -> {
+      let is_1_the_top_card = top_card.number == 1
+      use <- guard(when: is_1_the_top_card, return: Error(CantPlaceOver1))
 
-  let is_1_the_top_card = top_card.number == 1
-  use <- guard(when: is_1_the_top_card, return: Error(CantPlaceOver1))
+      let is_new_card_number_the_previous = card.number == top_card.number - 1
 
-  let is_new_card_number_the_previous = card.number == top_card.number - 1
+      use <- guard(
+        when: !is_new_card_number_the_previous,
+        return: Error(NotPreviousNumber),
+      )
 
-  use <- guard(
-    when: !is_new_card_number_the_previous,
-    return: Error(NotPreviousNumber),
-  )
+      let is_different_gender =
+        deck.get_gender(top_card.color) != deck.get_gender(card.color)
 
-  let is_different_gender =
-    deck.get_gender(top_card.color) != deck.get_gender(card.color)
+      use <- guard(when: !is_different_gender, return: Error(SameGender))
 
-  use <- guard(when: !is_different_gender, return: Error(SameGender))
-
-  Ok(SidePile([card, ..pile.cards]))
+      naive_stack.push(pile.cards, card) |> SidePile |> Ok
+    }
+  }
 }
 
 pub fn get_top_card(pile: SidePile) {
-  pile.cards |> list.first
+  let #(_, top_card) = pile.cards |> naive_stack.pop
+  top_card
 }

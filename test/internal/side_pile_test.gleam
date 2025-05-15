@@ -1,3 +1,4 @@
+import gleam/option.{Some}
 import gleam/result
 import gleeunit
 import internal/deck.{Card}
@@ -18,7 +19,7 @@ pub fn places_card_when_empty_test() {
     side_pile.new()
     |> place_card(card)
 
-  let assert Ok(top_card) = get_top_card(pile)
+  let assert Some(top_card) = get_top_card(pile)
 
   top_card
   |> should.equal(card)
@@ -33,7 +34,7 @@ pub fn places_descending_card_test() {
     // (which is a SidePile), and passes it into place_card, in the first position
     |> result.try(place_card(_, second_card))
 
-  let assert Ok(top_card) = get_top_card(pile)
+  let assert Some(top_card) = get_top_card(pile)
 
   top_card
   |> should.equal(second_card)

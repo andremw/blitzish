@@ -22,3 +22,11 @@ pub fn pop(stack: NaiveStack(t)) -> #(NaiveStack(t), Option(t)) {
 pub fn push(stack: NaiveStack(t), value) {
   NaiveStack([value, ..stack.items])
 }
+
+pub fn to_list(stack: NaiveStack(t)) {
+  stack.items |> list.reverse
+}
+
+pub fn size(stack: NaiveStack(t)) {
+  list.length(stack.items)
+}

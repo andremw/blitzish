@@ -112,7 +112,7 @@ fn get_full_tower() {
 pub fn calculates_total_points_for_each_deck_design_test() {
   let tower = get_full_tower()
 
-  let assert Ok(totals) = color_tower.calculate_total(tower)
+  let totals = color_tower.calculate_total(tower)
 
   totals
   |> should.equal([

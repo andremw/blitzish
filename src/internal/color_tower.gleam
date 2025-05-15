@@ -3,23 +3,22 @@ import gleam/dict
 import gleam/list
 import gleam/option.{None, Some}
 import internal/deck.{type Card}
+import internal/naive_stack.{type NaiveStack}
 
 pub opaque type ColorTower {
   /// The tower of cards that every player can add cards to, in ASCENDING order, from 1 to 10.
-  ColorTower(cards: List(Card))
+  ColorTower(cards: NaiveStack(Card))
 }
 
 pub fn new() {
-  ColorTower([])
+  ColorTower(naive_stack.from_list([]))
 }
 
 /// Gets the card from the top of the tower.
 /// Returns None if the tower is empty.
-pub fn get_top_card(tower) {
-  case tower {
-    ColorTower([]) -> None
-    ColorTower(cards) -> cards |> list.first |> option.from_result
-  }
+pub fn get_top_card(tower: ColorTower) {
+  let #(_, card) = naive_stack.pop(tower.cards)
+  card
 }
 
 pub type PlacementError {
@@ -40,7 +39,7 @@ pub fn place_card(tower: ColorTower, card: Card) {
     None -> {
       use <- guard(when: card.number != 1, return: Error(FirstCardMustBe1))
 
-      Ok(ColorTower([card]))
+      [card] |> naive_stack.from_list |> ColorTower |> Ok
     }
     Some(top_card) -> {
       let is_10_the_top_card = top_card.number == 10
@@ -55,7 +54,7 @@ pub fn place_card(tower: ColorTower, card: Card) {
 
       use <- guard(when: !colors_match, return: Error(ColorMismatch))
 
-      Ok(ColorTower(cards: [card, ..tower.cards]))
+      tower.cards |> naive_stack.push(card) |> ColorTower |> Ok
     }
   }
 }
@@ -69,13 +68,16 @@ pub type CalculationError {
 ///
 /// This will be used to calculate the points from each tower in a hand (or round) once the hand finishes.
 pub fn calculate_total(tower: ColorTower) {
-  case tower {
-    ColorTower(cards: []) -> Error(EmptyTower)
-    ColorTower(cards) ->
-      cards
-      |> list.group(fn(card) { card.deck_design })
-      |> dict.map_values(fn(_design, cards) { list.length(cards) })
-      |> dict.to_list
-      |> Ok
-  }
+  naive_stack.to_list(tower.cards)
+  |> list.group(fn(card) { card.deck_design })
+  |> dict.map_values(fn(_design, cards) { list.length(cards) })
+  |> dict.to_list
+}
+
+fn calculate_total_helper(tower: ColorTower, total: Int) {
+  let #(stack, card) = tower.cards |> naive_stack.pop
+
+  use <- guard(when: option.is_none(card), return: 0)
+
+  calculate_total_helper(ColorTower(stack), total + 1)
 }
