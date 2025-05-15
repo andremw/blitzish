@@ -21,7 +21,6 @@ pub fn get_gender(color) {
 }
 
 pub type Card {
-  // TODO: remove gender, as its inferred by the color
   Card(number: Int, color: Color, deck_design: DeckDesign)
 }
 
