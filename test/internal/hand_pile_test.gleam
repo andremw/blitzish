@@ -1,7 +1,8 @@
-import gleam/list
+// import gleam/list
 import gleeunit
-import internal/deck.{Card}
-import internal/hand_pile
+
+// import internal/deck.{Card}
+// import internal/hand_pile
 
 // import gleeunit/should
 
