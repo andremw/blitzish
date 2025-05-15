@@ -12,15 +12,16 @@ pub fn main() {
 }
 
 pub fn places_card_when_empty_test() {
-  let tower = color_tower.new()
-  let card5 = Card(color: deck.Blue, number: 1, deck_design: deck.First)
+  let card1 = Card(color: deck.Blue, number: 1, deck_design: deck.First)
 
-  let assert Ok(new_tower) = color_tower.place_card(tower, card5)
+  let assert Ok(tower) =
+    color_tower.new()
+    |> color_tower.place_card(card1)
 
-  let assert Some(placed_card) = color_tower.get_top_card(new_tower)
+  let assert Some(placed_card) = color_tower.get_top_card(tower)
 
   placed_card
-  |> should.equal(card5)
+  |> should.equal(card1)
 }
 
 // gleeunit test functions end in `_test`
