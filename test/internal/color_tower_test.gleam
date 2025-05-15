@@ -1,8 +1,9 @@
 import gleam/list
 import gleam/option.{Some}
+import gleam/result
 import gleeunit
 import gleeunit/should
-import internal/color_tower.{ColorMismatch, NotNextNumber}
+import internal/color_tower.{CantPlaceOver10, ColorMismatch, NotNextNumber}
 import internal/deck.{Card}
 
 pub fn main() {
@@ -115,4 +116,21 @@ pub fn calculates_total_points_for_each_deck_design_test() {
     #(deck.Third, 1),
     #(deck.Fourth, 1),
   ])
+}
+
+pub fn does_not_place_on_top_of_10_test() {
+  let tower =
+    color_tower.new()
+    |> color_tower.place_card(Card(
+      color: deck.Blue,
+      number: 10,
+      deck_design: deck.Second,
+    ))
+    |> result.try(color_tower.place_card(
+      _,
+      Card(color: deck.Blue, number: 11, deck_design: deck.Second),
+    ))
+
+  tower
+  |> should.equal(Error(CantPlaceOver10))
 }

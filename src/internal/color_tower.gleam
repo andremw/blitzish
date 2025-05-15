@@ -1,3 +1,4 @@
+import gleam/bool.{guard}
 import gleam/dict
 import gleam/list
 import gleam/option.{None}
@@ -24,6 +25,7 @@ pub fn get_top_card(tower) {
 pub type PlacementError {
   ColorMismatch
   NotNextNumber
+  CantPlaceOver10
 }
 
 /// Tries to place a card on top of the ColorTower.
@@ -43,6 +45,10 @@ pub fn place_card(tower: ColorTower, card) {
     ColorTower(cards) -> {
       // we know cards list is not empty
       let assert Ok(top_card) = list.last(cards)
+
+      let is_10_the_top_card = top_card.number == 10
+
+      use <- guard(when: is_10_the_top_card, return: Error(CantPlaceOver10))
 
       let is_next_number = card.number == top_card.number + 1
       let colors_match = card.color == top_card.color
