@@ -31,19 +31,14 @@ pub type PlacementError {
 
 /// Tries to place a card on top of the ColorTower.
 /// Succeeds if the new card:
+/// - is 1 when the tower is empty, or when the card on top is not 10 (which means, tower is full)
 /// - matches the color of the card on top
 /// - and is one number bigger than the card on top
-///
-/// Otherwise it returns
-///
-/// ```gleam
-/// Error(ColorMismatch)
-/// Error(NotNextNumber)
-/// ```
 pub fn place_card(tower: ColorTower, card: Card) {
   case tower {
     ColorTower(cards: []) -> {
       use <- guard(when: card.number != 1, return: Error(FirstCardMustBe1))
+
       Ok(ColorTower([card]))
     }
     ColorTower(cards) -> {
@@ -55,13 +50,14 @@ pub fn place_card(tower: ColorTower, card: Card) {
       use <- guard(when: is_10_the_top_card, return: Error(CantPlaceOver10))
 
       let is_next_number = card.number == top_card.number + 1
+
+      use <- guard(when: !is_next_number, return: Error(NotNextNumber))
+
       let colors_match = card.color == top_card.color
 
-      case is_next_number, colors_match {
-        True, True -> cards |> list.append([card]) |> ColorTower |> Ok
-        False, _ -> Error(NotNextNumber)
-        _, False -> Error(ColorMismatch)
-      }
+      use <- guard(when: !colors_match, return: Error(ColorMismatch))
+
+      cards |> list.append([card]) |> ColorTower |> Ok
     }
   }
 }
