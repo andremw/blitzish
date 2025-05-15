@@ -3,7 +3,7 @@ import gleam/option.{type Option, None, Some}
 
 /// A naive implementation of Stack
 pub opaque type Stack(t) {
-  Stack(cards: List(t))
+  Stack(items: List(t))
 }
 
 pub fn from_list(list) {
@@ -17,4 +17,9 @@ pub fn pop(stack: Stack(t)) -> #(Stack(t), Option(t)) {
     Stack([]) -> #(stack, None)
     Stack([top, ..rest]) -> #(Stack(rest), Some(top))
   }
+}
+
+/// pushes a value onto the stack
+pub fn push(stack: Stack(t), value) {
+  Stack([value, ..stack.items])
 }
