@@ -1,7 +1,7 @@
 import gleam/bool.{guard}
 import gleam/dict
 import gleam/list
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import internal/deck.{type Card}
 
 pub opaque type ColorTower {
@@ -18,7 +18,7 @@ pub fn new() {
 pub fn get_top_card(tower) {
   case tower {
     ColorTower([]) -> None
-    ColorTower(cards) -> cards |> list.last |> option.from_result
+    ColorTower(cards) -> cards |> list.first |> option.from_result
   }
 }
 
@@ -35,16 +35,14 @@ pub type PlacementError {
 /// - matches the color of the card on top
 /// - and is one number bigger than the card on top
 pub fn place_card(tower: ColorTower, card: Card) {
-  case tower {
-    ColorTower(cards: []) -> {
+  let top_card = get_top_card(tower)
+  case top_card {
+    None -> {
       use <- guard(when: card.number != 1, return: Error(FirstCardMustBe1))
 
       Ok(ColorTower([card]))
     }
-    ColorTower(cards) -> {
-      // we know cards list is not empty
-      let assert Ok(top_card) = list.last(cards)
-
+    Some(top_card) -> {
       let is_10_the_top_card = top_card.number == 10
 
       use <- guard(when: is_10_the_top_card, return: Error(CantPlaceOver10))
@@ -57,7 +55,7 @@ pub fn place_card(tower: ColorTower, card: Card) {
 
       use <- guard(when: !colors_match, return: Error(ColorMismatch))
 
-      cards |> list.append([card]) |> ColorTower |> Ok
+      Ok(ColorTower(cards: [card, ..tower.cards]))
     }
   }
 }

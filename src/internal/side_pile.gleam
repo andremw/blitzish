@@ -2,7 +2,7 @@ import gleam/bool.{guard}
 import gleam/list
 import internal/deck.{type Card}
 
-pub type SidePile {
+pub opaque type SidePile {
   SidePile(cards: List(Card))
 }
 
@@ -17,12 +17,9 @@ pub type PlacementError {
 }
 
 pub fn place_card(pile: SidePile, card) {
-  use <- guard(
-    when: list.is_empty(pile.cards),
-    return: Ok(SidePile(list.append(pile.cards, [card]))),
-  )
+  use <- guard(when: list.is_empty(pile.cards), return: Ok(SidePile([card])))
 
-  let assert Ok(top_card) = list.last(pile.cards)
+  let assert Ok(top_card) = list.first(pile.cards)
 
   let is_1_the_top_card = top_card.number == 1
   use <- guard(when: is_1_the_top_card, return: Error(CantPlaceOver1))
@@ -39,9 +36,9 @@ pub fn place_card(pile: SidePile, card) {
 
   use <- guard(when: !is_different_gender, return: Error(SameGender))
 
-  Ok(SidePile(list.append(pile.cards, [card])))
+  Ok(SidePile([card, ..pile.cards]))
 }
 
 pub fn get_top_card(pile: SidePile) {
-  pile.cards |> list.last
+  pile.cards |> list.first
 }
