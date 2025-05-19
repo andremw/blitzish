@@ -9,7 +9,7 @@ pub opaque type HandPile {
   AllCardsOnTable(table_cards: NaiveStack(Card))
   /// All cards are in the player's hand, there's none on the table. In this case, it's possible to start turning the cards
   /// onto the table.
-  AllCardsInHand(hand_cards: List(Card))
+  AllCardsInHand(hand_cards: NaiveStack(Card))
   /// The player has started to turn cards, some are on the table, some are in his hands.
   CardsInBothPlaces(hand_cards: NaiveStack(Card), table_cards: NaiveStack(Card))
 }
