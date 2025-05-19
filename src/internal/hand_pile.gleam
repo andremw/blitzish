@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/option.{None, Some}
 import internal/deck.{type Card}
 import internal/naive_stack.{type NaiveStack}
 
@@ -16,5 +17,47 @@ pub opaque type HandPile {
 
 /// Creates a new hand pile as AllCardsInHand
 pub fn new(cards) {
-  AllCardsInHand(cards)
+  AllCardsInHand(naive_stack.from_list(cards |> list.reverse()))
+}
+
+pub fn turn(pile: HandPile) {
+  case pile {
+    AllCardsInHand(hand) -> {
+      let #(new_hand, card) = naive_stack.pop(hand)
+      case card {
+        None -> Error(Nil)
+        Some(card) ->
+          Ok(CardsInBothPlaces(new_hand, naive_stack.from_list([card])))
+      }
+    }
+    AllCardsOnTable(_) -> todo
+    CardsInBothPlaces(_, _) -> todo
+  }
+}
+
+pub fn to_list(pile: HandPile) {
+  case pile {
+    AllCardsInHand(hand) -> #(naive_stack.to_list(hand), [])
+    AllCardsOnTable(table) -> #([], naive_stack.to_list(table))
+    CardsInBothPlaces(hand, table) -> #(
+      naive_stack.to_list(hand),
+      naive_stack.to_list(table),
+    )
+  }
+}
+
+pub fn play_top_card(pile: HandPile) {
+  case pile {
+    CardsInBothPlaces(hand, table) -> {
+      let #(new_table, card) = naive_stack.pop(table)
+      case card {
+        None -> Error(Nil)
+        Some(card) ->
+          #(CardsInBothPlaces(hand, new_table), card)
+          |> Ok
+      }
+    }
+    AllCardsInHand(_) -> todo
+    AllCardsOnTable(_) -> todo
+  }
 }
