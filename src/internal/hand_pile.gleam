@@ -1,3 +1,4 @@
+import gleam/bool.{guard}
 import gleam/list
 import gleam/option.{None, Some}
 import internal/deck.{type Card}
@@ -23,12 +24,20 @@ pub fn new(cards) {
 pub fn turn(pile: HandPile) {
   case pile {
     AllCardsInHand(hand) -> {
-      let #(new_hand, card) = naive_stack.pop(hand)
-      case card {
-        None -> Error(Nil)
-        Some(card) ->
-          Ok(CardsInBothPlaces(new_hand, naive_stack.from_list([card])))
-      }
+      let #(hand, card1) = naive_stack.pop(hand)
+
+      // this should never happen, unless the HandPile was initialized with no cards.
+      use <- guard(when: option.is_none(card1), return: Error(Nil))
+
+      let #(hand, card2) = naive_stack.pop(hand)
+
+      use <- guard(when: option.is_none(card2), return: {
+        let assert Some(card1) = card1
+        Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1])))
+      })
+
+      let assert #(Some(card1), Some(card2)) = #(card1, card2)
+      Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1, card2])))
     }
     AllCardsOnTable(_) -> todo
     CardsInBothPlaces(_, _) -> todo
