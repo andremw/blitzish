@@ -33,7 +33,14 @@ pub fn turn(pile: HandPile) {
 
       use <- guard(when: option.is_none(card2), return: {
         let assert Some(card1) = card1
-        Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1])))
+
+        let stack = naive_stack.from_list([card1])
+
+        case naive_stack.size(hand) {
+          0 -> AllCardsOnTable(stack)
+          _ -> CardsInBothPlaces(hand, stack)
+        }
+        |> Ok
       })
 
       let #(hand, card3) = naive_stack.pop(hand)
@@ -51,7 +58,7 @@ pub fn turn(pile: HandPile) {
 
       Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1, card2, card3])))
     }
-    AllCardsOnTable(_) -> todo
+    AllCardsOnTable(table) -> Ok(AllCardsInHand(table))
     CardsInBothPlaces(_, _) -> todo
   }
 }

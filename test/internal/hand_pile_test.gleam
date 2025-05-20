@@ -68,6 +68,22 @@ pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
   #(hand, table)
   |> should.equal(#([], [card1, card2, card3]))
 }
+
+pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
+  let card = Card(color: deck.Blue, number: 1, deck_design: deck.First)
+
+  let assert Ok(#(hand, table)) =
+    [card]
+    |> hand_pile.new
+    // we turn it once, so now all cards are on the table
+    |> hand_pile.turn
+    // turn again, all cards are back to the hand
+    |> result.try(hand_pile.turn)
+    |> result.map(hand_pile.to_list)
+
+  #(hand, table)
+  |> should.equal(#([card], []))
+}
 // pub fn takes_top_table_card_test() {
 //   todo
 // }
@@ -77,9 +93,5 @@ pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
 // }
 
 // pub fn does_not_allow_duplicated_card_test() {
-//   todo
-// }
-
-// pub fn moves_table_cards_back_to_hand_test() {
 //   todo
 // }
