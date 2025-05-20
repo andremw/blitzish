@@ -1,5 +1,3 @@
-import gleam/bool.{guard}
-import gleam/list
 import gleam/option.{None, Some}
 import internal/deck.{type Card}
 import internal/naive_stack.{type NaiveStack}
@@ -18,48 +16,44 @@ pub opaque type HandPile {
 
 /// Creates a new hand pile as AllCardsInHand
 pub fn new(cards) {
-  AllCardsInHand(naive_stack.from_list(cards |> list.reverse()))
+  case cards {
+    [] -> Error(Nil)
+    cards -> Ok(AllCardsInHand(naive_stack.from_list(cards)))
+  }
 }
 
+/// Turns up to three cards from the hand onto the table.
+/// If any of the three turns result in AllCardsOnTable, the function returns AllCardsOnTable.
+/// If turn is called with AllCardsOnTable, then it becomes AllCardsInHand
 pub fn turn(pile: HandPile) {
-  case pile {
-    AllCardsInHand(hand) -> {
-      let #(hand, card1) = naive_stack.pop(hand)
-
-      // this should never happen, unless the HandPile was initialized with no cards.
-      use <- guard(when: option.is_none(card1), return: Error(Nil))
-
-      let #(hand, card2) = naive_stack.pop(hand)
-
-      use <- guard(when: option.is_none(card2), return: {
-        let assert Some(card1) = card1
-
-        let stack = naive_stack.from_list([card1])
-
-        case naive_stack.size(hand) {
-          0 -> AllCardsOnTable(stack)
-          _ -> CardsInBothPlaces(hand, stack)
-        }
-        |> Ok
-      })
-
-      let #(hand, card3) = naive_stack.pop(hand)
-
-      use <- guard(when: option.is_none(card3), return: {
-        let assert #(Some(card1), Some(card2)) = #(card1, card2)
-        Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1, card2])))
-      })
-
-      let assert #(Some(card1), Some(card2), Some(card3)) = #(
-        card1,
-        card2,
-        card3,
-      )
-
-      Ok(CardsInBothPlaces(hand, naive_stack.from_list([card1, card2, card3])))
+  case turn_hand_card(pile) {
+    AllCardsOnTable(table) -> AllCardsOnTable(table)
+    pile -> {
+      case turn_hand_card(pile) {
+        AllCardsOnTable(table) -> AllCardsOnTable(table)
+        pile -> turn_hand_card(pile)
+      }
     }
-    AllCardsOnTable(table) -> Ok(AllCardsInHand(table))
-    CardsInBothPlaces(_, _) -> todo
+  }
+}
+
+fn turn_hand_card(pile: HandPile) {
+  case pile {
+    AllCardsOnTable(table) -> AllCardsInHand(table)
+    AllCardsInHand(hand) -> {
+      let assert #(hand, Some(card)) = naive_stack.pop(hand)
+      case naive_stack.size(hand) {
+        0 -> AllCardsOnTable(naive_stack.from_list([card]))
+        _ -> CardsInBothPlaces(hand, naive_stack.from_list([card]))
+      }
+    }
+    CardsInBothPlaces(hand, table) -> {
+      let assert #(hand, Some(card)) = naive_stack.pop(hand)
+      case naive_stack.size(hand) {
+        0 -> AllCardsOnTable(naive_stack.push(table, card))
+        _ -> CardsInBothPlaces(hand, naive_stack.push(table, card))
+      }
+    }
   }
 }
 
