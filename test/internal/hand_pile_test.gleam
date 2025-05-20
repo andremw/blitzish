@@ -53,10 +53,21 @@ pub fn turns_two_cards_at_once_if_two_cards_test() {
   #(hand, table)
   |> should.equal(#([], [card1, card2]))
 }
-// pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
-//   todo
-// }
 
+pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
+  let card1 = Card(color: deck.Blue, number: 1, deck_design: deck.First)
+  let card2 = Card(color: deck.Blue, number: 2, deck_design: deck.First)
+  let card3 = Card(color: deck.Blue, number: 3, deck_design: deck.First)
+
+  let assert Ok(#(hand, table)) =
+    [card1, card2, card3]
+    |> hand_pile.new
+    |> hand_pile.turn
+    |> result.map(hand_pile.to_list)
+
+  #(hand, table)
+  |> should.equal(#([], [card1, card2, card3]))
+}
 // pub fn takes_top_table_card_test() {
 //   todo
 // }
