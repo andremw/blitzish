@@ -23,17 +23,21 @@ pub fn new(cards) {
 }
 
 /// Turns up to three cards from the hand onto the table.
-/// If any of the three turns result in AllCardsOnTable, the function returns AllCardsOnTable.
-/// If turn is called with AllCardsOnTable, then it becomes AllCardsInHand
+/// If all cards are on the table, moves all cards to the hand.
+/// Otherwise, if any of the three turns result in AllCardsOnTable, the function returns AllCardsOnTable.
 pub fn turn(pile: HandPile) {
-  case turn_hand_card(pile) {
-    AllCardsOnTable(table) -> AllCardsOnTable(table)
-    pile -> {
+  case pile {
+    AllCardsOnTable(table) -> AllCardsInHand(table)
+    pile ->
       case turn_hand_card(pile) {
         AllCardsOnTable(table) -> AllCardsOnTable(table)
-        pile -> turn_hand_card(pile)
+        pile -> {
+          case turn_hand_card(pile) {
+            AllCardsOnTable(table) -> AllCardsOnTable(table)
+            pile -> turn_hand_card(pile)
+          }
+        }
       }
-    }
   }
 }
 
