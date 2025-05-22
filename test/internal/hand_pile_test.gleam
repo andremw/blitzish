@@ -77,10 +77,18 @@ pub fn plays_top_table_card_test() {
   should.equal(card_played, card2)
   should.equal(pile_pair, #([card1], [card3, card4]))
 }
-// pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
-//   todo
-// }
 
+pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
+  let assert Ok(#(pile_pair, card_played)) =
+    [card1, card2, card3]
+    |> hand_pile.new
+    |> result.map(hand_pile.turn)
+    |> result.try(hand_pile.play_top_card)
+    |> result.map(pair.map_first(_, hand_pile.to_list))
+
+  should.equal(card_played, card1)
+  should.equal(pile_pair, #([], [card2, card3]))
+}
 // pub fn does_not_play_if_pile_is_empty_test() {
 //   todo
 // }

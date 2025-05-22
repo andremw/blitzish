@@ -83,7 +83,15 @@ pub fn play_top_card(pile: HandPile) {
           |> Ok
       }
     }
-    AllCardsInHand(_) -> todo
-    AllCardsOnTable(_) -> todo
+    AllCardsOnTable(table) -> {
+      let #(table, card) = naive_stack.pop(table)
+      case card {
+        None -> Error(Nil)
+        Some(card) ->
+          #(AllCardsOnTable(table), card)
+          |> Ok
+      }
+    }
+    AllCardsInHand(_) -> Error(Nil)
   }
 }
