@@ -23,14 +23,12 @@ fn make_deck(design: DeckDesign) {
 }
 
 pub fn new(design: DeckDesign) {
-  make_deck(design) |> Deck
+  make_deck(design) |> list.shuffle |> Deck
 }
 
 pub fn to_list(deck: Deck) {
   deck.cards
 }
-
-pub type ShuffledDeck
 
 pub type Player
 
