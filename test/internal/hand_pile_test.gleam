@@ -89,6 +89,15 @@ pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
   should.equal(card_played, card1)
   should.equal(pile_pair, #([], [card2, card3]))
 }
+
+pub fn does_not_play_if_all_cards_are_in_hand_test() {
+  let play =
+    [card1, card2, card3]
+    |> hand_pile.new
+    |> result.try(hand_pile.play_top_card)
+
+  play |> should.equal(Error(Nil))
+}
 // pub fn does_not_play_if_pile_is_empty_test() {
 //   todo
 // }
