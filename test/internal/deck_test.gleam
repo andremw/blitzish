@@ -1,13 +1,12 @@
 import gleam/list
-import internal/card.{type DeckDesign, Card}
+import gleeunit
+import internal/card.{type DeckDesign, Card, First}
+import internal/deck
 
-pub type SideStack {
-  /// A stack of cards, used by each player to
-  SideStack(cards: List(card.Card))
-}
+import gleeunit/should
 
-pub opaque type Deck {
-  Deck(cards: List(card.Card))
+pub fn main() {
+  gleeunit.main()
 }
 
 fn make_deck(design: DeckDesign) {
@@ -22,18 +21,16 @@ fn make_deck(design: DeckDesign) {
   |> list.append(yellow)
 }
 
-pub fn new(design: DeckDesign) {
-  make_deck(design) |> Deck
+pub fn creates_deck_for_deck_design_test() {
+  let new_deck = deck.new(First)
+
+  new_deck
+  |> deck.to_list
+  |> should.equal(make_deck(First))
 }
 
-pub fn to_list(deck: Deck) {
-  deck.cards
-}
+pub fn creates_deck_with_40_cards_test() {
+  let new_deck = deck.new(First)
 
-pub type ShuffledDeck
-
-pub type Player
-
-pub type Game {
-  Game(players: List(Player))
+  new_deck |> deck.to_list |> list.length |> should.equal(40)
 }
