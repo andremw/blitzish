@@ -32,6 +32,7 @@ pub fn push(stack: NaiveStack(t), value) {
   NaiveStack([value, ..stack.items])
 }
 
+/// Returns a list of items in the stack, with the first element being the top of the stack.
 pub fn to_list(stack: NaiveStack(t)) {
   stack.items
 }
