@@ -67,11 +67,11 @@ pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
   #(hand, table)
   |> should.equal(#([card], []))
 }
-// pub fn takes_top_table_card_test() {
+// pub fn plays_top_table_card_test() {
 //   todo
 // }
 
-// pub fn does_not_add_card_from_different_deck_design_test() {
+// pub fn adds_card_from_a_deck() {
 //   todo
 // }
 
