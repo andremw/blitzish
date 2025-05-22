@@ -98,10 +98,6 @@ pub fn does_not_play_if_all_cards_are_in_hand_test() {
 
   play |> should.equal(Error(Nil))
 }
-// pub fn does_not_play_if_pile_is_empty_test() {
-//   todo
-// }
-
 // pub fn adds_cards_from_a_deck() {
 //   todo
 // }
