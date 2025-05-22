@@ -1,3 +1,4 @@
+import gleam/pair
 import gleam/result
 import gleeunit
 
@@ -67,10 +68,23 @@ pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
   #(hand, table)
   |> should.equal(#([card], []))
 }
-// pub fn plays_top_table_card_test() {
-//   todo
-// }
 
+pub fn plays_top_table_card_test() {
+  let card1 = Card(color: deck.Blue, number: 1, deck_design: deck.First)
+  let card2 = Card(color: deck.Blue, number: 2, deck_design: deck.First)
+  let card3 = Card(color: deck.Blue, number: 3, deck_design: deck.First)
+  let card4 = Card(color: deck.Blue, number: 4, deck_design: deck.First)
+
+  let assert Ok(#(pile_pair, card_played)) =
+    [card1, card2, card3, card4]
+    |> hand_pile.new
+    |> result.map(hand_pile.turn)
+    |> result.try(hand_pile.play_top_card)
+    |> result.map(pair.map_first(_, hand_pile.to_list))
+
+  should.equal(card_played, card2)
+  should.equal(pile_pair, #([card1], [card3, card4]))
+}
 // pub fn adds_card_from_a_deck() {
 //   todo
 // }
