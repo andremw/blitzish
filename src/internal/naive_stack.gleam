@@ -33,7 +33,7 @@ pub fn push(stack: NaiveStack(t), value) {
 }
 
 pub fn to_list(stack: NaiveStack(t)) {
-  stack.items |> list.reverse
+  stack.items
 }
 
 pub fn size(stack: NaiveStack(t)) {

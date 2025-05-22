@@ -34,7 +34,7 @@ pub fn turns_two_cards_at_once_if_two_cards_test() {
     |> result.map(hand_pile.to_list)
 
   #(hand, table)
-  |> should.equal(#([], [card2, card1]))
+  |> should.equal(#([], [card1, card2]))
 }
 
 pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
@@ -49,7 +49,7 @@ pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
     |> result.map(hand_pile.to_list)
 
   #(hand, table)
-  |> should.equal(#([], [card3, card2, card1]))
+  |> should.equal(#([], [card1, card2, card3]))
 }
 
 pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
