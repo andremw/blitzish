@@ -85,7 +85,15 @@ pub fn plays_top_table_card_test() {
   should.equal(card_played, card2)
   should.equal(pile_pair, #([card1], [card3, card4]))
 }
-// pub fn adds_card_from_a_deck() {
+// pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
+//   todo
+// }
+
+// pub fn does_not_play_if_pile_is_empty_test() {
+//   todo
+// }
+
+// pub fn adds_cards_from_a_deck() {
 //   todo
 // }
 
