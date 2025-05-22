@@ -2,7 +2,7 @@ import gleam/bool.{guard}
 import gleam/dict
 import gleam/list
 import gleam/option.{None, Some}
-import internal/deck.{type Card}
+import internal/card.{type Card}
 import internal/naive_stack.{type NaiveStack}
 
 pub opaque type ColorTower {

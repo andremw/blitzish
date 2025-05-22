@@ -1,6 +1,6 @@
 import gleam/bool.{guard}
 import gleam/option
-import internal/deck.{type Card}
+import internal/card.{type Card}
 import internal/naive_stack.{type NaiveStack}
 
 pub opaque type SidePile {
@@ -34,7 +34,7 @@ pub fn place_card(pile: SidePile, card) {
       )
 
       let is_different_gender =
-        deck.get_gender(top_card.color) != deck.get_gender(card.color)
+        card.get_gender(top_card.color) != card.get_gender(card.color)
 
       use <- guard(when: !is_different_gender, return: Error(SameGender))
 

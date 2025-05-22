@@ -2,7 +2,7 @@ import gleam/pair
 import gleam/result
 import gleeunit
 
-import internal/deck.{Card}
+import internal/card.{Card}
 import internal/hand_pile
 
 import gleeunit/should
@@ -11,13 +11,13 @@ pub fn main() {
   gleeunit.main()
 }
 
-const card1 = Card(color: deck.Blue, number: 1, deck_design: deck.First)
+const card1 = Card(color: card.Blue, number: 1, deck_design: card.First)
 
-const card2 = Card(color: deck.Blue, number: 2, deck_design: deck.First)
+const card2 = Card(color: card.Blue, number: 2, deck_design: card.First)
 
-const card3 = Card(color: deck.Blue, number: 3, deck_design: deck.First)
+const card3 = Card(color: card.Blue, number: 3, deck_design: card.First)
 
-const card4 = Card(color: deck.Blue, number: 4, deck_design: deck.First)
+const card4 = Card(color: card.Blue, number: 4, deck_design: card.First)
 
 pub fn turns_one_card_if_one_card_test() {
   let assert Ok(#(hand, table)) =

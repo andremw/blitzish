@@ -1,5 +1,5 @@
 import gleam/option.{None, Some}
-import internal/deck.{type Card}
+import internal/card.{type Card}
 import internal/naive_stack.{type NaiveStack}
 
 /// The HandPile can be in three possible states, each restricting the next possible actions.

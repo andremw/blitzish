@@ -1,41 +1,8 @@
-pub type Gender {
-  Boy
-  Girl
-}
-
-pub type Color {
-  Blue
-  Yellow
-  Red
-  Green
-}
-
-/// Gets the gender related to the color.
-/// For Red and Blue, it returns Boy.
-/// For Green and Yellow, it returns Girl.
-pub fn get_gender(color) {
-  case color {
-    Red | Blue -> Boy
-    Green | Yellow -> Girl
-  }
-}
-
-pub type Card {
-  Card(number: Int, color: Color, deck_design: DeckDesign)
-}
+import internal/card.{type Card}
 
 pub type SideStack {
   /// A stack of cards, used by each player to
   SideStack(cards: List(Card))
-}
-
-/// We'll need to think about the possible deck types here.
-/// But it's more of a visual thing, not a super important part of the state
-pub type DeckDesign {
-  First
-  Second
-  Third
-  Fourth
 }
 
 pub type Deck
