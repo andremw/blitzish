@@ -1,6 +1,7 @@
 import gleam/pair
 import gleam/result
 import gleeunit
+import internal/deck
 
 import internal/card.{Card}
 import internal/hand_pile
@@ -92,9 +93,10 @@ pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
 
 pub fn does_not_play_if_all_cards_are_in_hand_test() {
   let play =
-    [card1, card2, card3]
-    |> hand_pile.new
-    |> result.try(hand_pile.play_top_card)
+    deck.new(card.First)
+    |> hand_pile.new2
+    |> pair.first
+    |> hand_pile.play_top_card
 
   play |> should.equal(Error(Nil))
 }
