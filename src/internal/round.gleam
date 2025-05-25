@@ -1,8 +1,7 @@
 import gleam/dict.{type Dict}
-import internal/card.{type Card}
 import internal/color_tower.{type ColorTower}
 import internal/hand_pile.{type HandPile}
-import internal/naive_stack.{type NaiveStack}
+import internal/main_pile.{type MainPile}
 import internal/side_pile.{type SidePile}
 
 pub type Player
@@ -21,7 +20,7 @@ pub type PlayerPiles {
     hand_pile: HandPile,
     side_pile: SidePile,
     // for now, I think this is just a simple stack of 10 cards
-    main_pile: NaiveStack(Card),
+    main_pile: MainPile,
   )
 }
 
