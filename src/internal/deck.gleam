@@ -29,9 +29,3 @@ pub fn new(design: DeckDesign) {
 pub fn to_list(deck: Deck) {
   deck.cards
 }
-
-pub type Player
-
-pub type Game {
-  Game(players: List(Player))
-}
