@@ -26,6 +26,14 @@ pub fn new(design: DeckDesign) {
   make_deck(design) |> list.shuffle |> Deck
 }
 
+/// Returns a tuple of #(n cards taken from the front, new deck with n fewer cards)
+pub fn take(deck: Deck, number_of_cards: Int) -> #(List(card.Card), Deck) {
+  #(
+    deck.cards |> list.take(number_of_cards),
+    Deck(deck.cards |> list.drop(number_of_cards)),
+  )
+}
+
 pub fn to_list(deck: Deck) {
   deck.cards
 }
