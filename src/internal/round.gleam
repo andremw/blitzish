@@ -13,12 +13,14 @@ pub type Score =
 pub type Scores =
   Dict(Player, Score)
 
+/// This record type keeps the state of a player's piles during a single round.
 pub type PlayerPiles {
   PlayerPiles(
     player: Player,
     color_tower: ColorTower,
     hand_pile: HandPile,
     side_pile: SidePile,
+    // for now, I think this is just a simple stack of 10 cards
     main_pile: NaiveStack(Card),
   )
 }
