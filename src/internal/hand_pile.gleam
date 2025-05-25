@@ -1,5 +1,7 @@
 import gleam/option.{None, Some}
+import gleam/pair
 import internal/card.{type Card}
+import internal/deck.{type Deck}
 import internal/naive_stack.{type NaiveStack}
 
 /// The HandPile can be in three possible states, each restricting the next possible actions.
@@ -20,6 +22,17 @@ pub fn new(cards) {
     [] -> Error(Nil)
     cards -> Ok(AllCardsInHand(naive_stack.from_list(cards)))
   }
+}
+
+/// Creates a new hand pile as AllCardsInHand
+pub fn new2(deck: Deck) -> #(HandPile, Deck) {
+  let #(main_pile, deck) =
+    deck
+    |> deck.take(27)
+    |> pair.map_first(naive_stack.from_list)
+    |> pair.map_first(AllCardsInHand)
+
+  #(main_pile, deck)
 }
 
 /// Turns up to three cards from the hand onto the table.
