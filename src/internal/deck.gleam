@@ -12,6 +12,8 @@ pub opaque type Deck {
 
 fn make_deck(design: DeckDesign) {
   let range = list.range(1, 10)
+  // all these maps and appends could be replaced by a single flat_map, but I'll keep this here for better readability
+  // if it ever becomes a performance bottleneck then I'll change it
   let blue = range |> list.map(Card(_, card.Blue, design))
   let green = range |> list.map(Card(_, card.Green, design))
   let red = range |> list.map(Card(_, card.Red, design))
