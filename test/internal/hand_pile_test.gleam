@@ -19,8 +19,6 @@ const card2 = Card(color: card.Blue, number: 2, deck_design: card.First)
 
 const card3 = Card(color: card.Blue, number: 3, deck_design: card.First)
 
-const card4 = Card(color: card.Blue, number: 4, deck_design: card.First)
-
 pub fn turns_one_card_if_one_card_test() {
   let assert Ok(#(hand, table)) =
     [card1]
@@ -69,15 +67,26 @@ pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
 }
 
 pub fn plays_top_table_card_test() {
+  let turned_pile =
+    deck.new(card.Third)
+    |> hand_pile.new2
+    |> pair.first
+    |> hand_pile.turn
+
+  let assert Ok(expected_played_card) =
+    turned_pile |> hand_pile.to_list |> pair.second |> list.first
+
   let assert Ok(#(pile_pair, card_played)) =
-    [card1, card2, card3, card4]
-    |> hand_pile.new
-    |> result.map(hand_pile.turn)
-    |> result.try(hand_pile.play_top_card)
+    turned_pile
+    |> hand_pile.play_top_card
     |> result.map(pair.map_first(_, hand_pile.to_list))
 
-  should.equal(card_played, card2)
-  should.equal(pile_pair, #([card1], [card3, card4]))
+  should.equal(card_played, expected_played_card)
+
+  pile_pair
+  |> pair.map_first(list.length)
+  |> pair.map_second(list.length)
+  |> should.equal(#(24, 2))
 }
 
 pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
@@ -162,19 +171,6 @@ pub fn does_not_play_if_all_cards_are_in_hand_test() {
 
 //   #(hand, table)
 //   |> should.equal(#([card1], []))
-// }
-
-// pub fn plays_top_table_card_test() {
-//   let assert Ok(#(pile_pair, card_played)) =
-//     deck.new(card.Fourth)
-//     |> hand_pile.new
-//     |> pair.first
-//     |> hand_pile.turn
-//     |> hand_pile.play_top_card
-//     |> result.map(pair.map_first(_, hand_pile.to_list))
-
-//   should.equal(card_played, card2)
-//   should.equal(pile_pair, #([card1], [card3, card4]))
 // }
 
 // pub fn adds_cards_from_a_deck() {
