@@ -4,7 +4,7 @@ import gleam/result
 import gleeunit
 import internal/deck
 
-import internal/card.{Card}
+import internal/card
 import internal/hand_pile.{type HandPile}
 
 import gleeunit/should
@@ -13,20 +13,21 @@ pub fn main() {
   gleeunit.main()
 }
 
-const card1 = Card(color: card.Blue, number: 1, deck_design: card.First)
-
 pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
-  let assert Ok(#(hand, table)) =
-    [card1]
-    |> hand_pile.new
-    // we turn it once, so now all cards are on the table
-    |> result.map(hand_pile.turn)
-    // turn again, all cards are back to the hand
-    |> result.map(hand_pile.turn)
-    |> result.map(hand_pile.to_list)
+  let turned_pile =
+    deck.new(card.Second)
+    |> hand_pile.new2
+    |> pair.first
+    |> turn_all_cards
 
-  #(hand, table)
-  |> should.equal(#([card1], []))
+  // turn once more to move all cards to the hand
+  let pile_in_hand = turned_pile |> hand_pile.turn
+
+  pile_in_hand
+  |> hand_pile.to_list
+  |> pair.map_first(list.length)
+  |> pair.map_second(list.length)
+  |> should.equal(#(27, 0))
 }
 
 pub fn plays_top_table_card_test() {
@@ -84,25 +85,6 @@ pub fn does_not_play_if_all_cards_are_in_hand_test() {
 
   play |> should.equal(Error(Nil))
 }
-
-// pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
-//   let #(hand, table) =
-//     deck.new(card.Third)
-//     |> hand_pile.new
-//     |> pair.first
-//     // we turn it once, so now all cards are on the table
-//     |> hand_pile.turn
-//     // turn again, all cards are back to the hand
-//     |> hand_pile.turn
-//     |> hand_pile.to_list
-
-//   #(hand, table)
-//   |> should.equal(#([card1], []))
-// }
-
-// pub fn adds_cards_from_a_deck() {
-//   todo
-// }
 
 // pub fn does_not_allow_duplicated_card_test() {
 //   todo
