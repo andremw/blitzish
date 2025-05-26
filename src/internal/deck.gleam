@@ -11,10 +11,11 @@ pub opaque type Deck {
 }
 
 fn make_deck(design: DeckDesign) {
-  let blue = list.range(1, 10) |> list.map(Card(_, card.Blue, design))
-  let green = list.range(1, 10) |> list.map(Card(_, card.Green, design))
-  let red = list.range(1, 10) |> list.map(Card(_, card.Red, design))
-  let yellow = list.range(1, 10) |> list.map(Card(_, card.Yellow, design))
+  let range = list.range(1, 10)
+  let blue = range |> list.map(Card(_, card.Blue, design))
+  let green = range |> list.map(Card(_, card.Green, design))
+  let red = range |> list.map(Card(_, card.Red, design))
+  let yellow = range |> list.map(Card(_, card.Yellow, design))
 
   blue
   |> list.append(green)
