@@ -59,10 +59,6 @@ pub fn place_card(tower: ColorTower, card: Card) {
   }
 }
 
-pub type CalculationError {
-  EmptyTower
-}
-
 /// Calculates the total for each deck design, each belonging to a single player.
 /// Returns Error(EmptyTower) if the tower is empty.
 ///
@@ -72,12 +68,4 @@ pub fn calculate_total(tower: ColorTower) {
   |> list.group(fn(card) { card.deck_design })
   |> dict.map_values(fn(_design, cards) { list.length(cards) })
   |> dict.to_list
-}
-
-fn calculate_total_helper(tower: ColorTower, total: Int) {
-  let #(stack, card) = tower.cards |> naive_stack.pop
-
-  use <- guard(when: option.is_none(card), return: 0)
-
-  calculate_total_helper(ColorTower(stack), total + 1)
 }
