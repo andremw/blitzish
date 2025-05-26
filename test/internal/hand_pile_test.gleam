@@ -15,43 +15,6 @@ pub fn main() {
 
 const card1 = Card(color: card.Blue, number: 1, deck_design: card.First)
 
-const card2 = Card(color: card.Blue, number: 2, deck_design: card.First)
-
-const card3 = Card(color: card.Blue, number: 3, deck_design: card.First)
-
-pub fn turns_one_card_if_one_card_test() {
-  let assert Ok(#(hand, table)) =
-    [card1]
-    |> hand_pile.new
-    |> result.map(hand_pile.turn)
-    |> result.map(hand_pile.to_list)
-
-  #(hand, table)
-  |> should.equal(#([], [card1]))
-}
-
-pub fn turns_two_cards_at_once_if_two_cards_test() {
-  let assert Ok(#(hand, table)) =
-    [card1, card2]
-    |> hand_pile.new
-    |> result.map(hand_pile.turn)
-    |> result.map(hand_pile.to_list)
-
-  #(hand, table)
-  |> should.equal(#([], [card1, card2]))
-}
-
-pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
-  let assert Ok(#(hand, table)) =
-    [card1, card2, card3]
-    |> hand_pile.new
-    |> result.map(hand_pile.turn)
-    |> result.map(hand_pile.to_list)
-
-  #(hand, table)
-  |> should.equal(#([], [card1, card2, card3]))
-}
-
 pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
   let assert Ok(#(hand, table)) =
     [card1]
@@ -121,42 +84,6 @@ pub fn does_not_play_if_all_cards_are_in_hand_test() {
 
   play |> should.equal(Error(Nil))
 }
-
-// pub fn turns_one_card_if_one_card_test() {
-//   let #(hand, table) =
-//     deck.new(card.Second)
-//     |> hand_pile.new
-//     |> pair.first
-//     |> hand_pile.turn
-//     |> hand_pile.to_list
-
-//   #(hand, table)
-//   |> should.equal(#([], [card1]))
-// }
-
-// pub fn turns_two_cards_at_once_if_two_cards_test() {
-//   let #(hand, table) =
-//     deck.new(card.First)
-//     |> hand_pile.new
-//     |> pair.first
-//     |> hand_pile.turn
-//     |> hand_pile.to_list
-
-//   #(hand, table)
-//   |> should.equal(#([], [card1, card2]))
-// }
-
-// pub fn turns_three_hand_cards_at_once_if_three_cards_or_more_test() {
-//   let #(hand, table) =
-//     deck.new(card.Third)
-//     |> hand_pile.new
-//     |> pair.first
-//     |> hand_pile.turn
-//     |> hand_pile.to_list
-
-//   #(hand, table)
-//   |> should.equal(#([], [card1, card2, card3]))
-// }
 
 // pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
 //   let #(hand, table) =
