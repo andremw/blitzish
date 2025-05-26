@@ -16,7 +16,7 @@ pub fn main() {
 pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
   let turned_pile =
     deck.new(card.Second)
-    |> hand_pile.new2
+    |> hand_pile.new
     |> pair.first
     |> turn_all_cards
 
@@ -33,7 +33,7 @@ pub fn turn_moves_table_cards_back_to_hand_when_all_on_table_test() {
 pub fn plays_top_table_card_test() {
   let turned_pile =
     deck.new(card.Third)
-    |> hand_pile.new2
+    |> hand_pile.new
     |> pair.first
     |> hand_pile.turn
 
@@ -56,7 +56,7 @@ pub fn plays_top_table_card_test() {
 pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
   let turned_pile =
     deck.new(card.Fourth)
-    |> hand_pile.new2
+    |> hand_pile.new
     |> pair.first
     |> turn_all_cards
 
@@ -79,7 +79,7 @@ pub fn plays_top_table_card_when_all_cards_are_on_table_test() {
 pub fn does_not_play_if_all_cards_are_in_hand_test() {
   let play =
     deck.new(card.First)
-    |> hand_pile.new2
+    |> hand_pile.new
     |> pair.first
     |> hand_pile.play_top_card
 

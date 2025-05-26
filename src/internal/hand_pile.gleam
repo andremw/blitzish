@@ -17,15 +17,7 @@ pub opaque type HandPile {
 }
 
 /// Creates a new hand pile as AllCardsInHand
-pub fn new(cards) {
-  case cards {
-    [] -> Error(Nil)
-    cards -> Ok(AllCardsInHand(naive_stack.from_list(cards)))
-  }
-}
-
-/// Creates a new hand pile as AllCardsInHand
-pub fn new2(deck: Deck) -> #(HandPile, Deck) {
+pub fn new(deck: Deck) -> #(HandPile, Deck) {
   let #(main_pile, deck) =
     deck
     |> deck.take(27)
