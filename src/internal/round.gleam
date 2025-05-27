@@ -19,7 +19,6 @@ pub type PlayerPiles {
     color_tower: ColorTower,
     hand_pile: HandPile,
     side_pile: SidePile,
-    // for now, I think this is just a simple stack of 10 cards
     main_pile: MainPile,
   )
 }
