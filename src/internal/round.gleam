@@ -13,9 +13,8 @@ pub type Scores =
   Dict(Player, Score)
 
 /// This record type keeps the state of a player's piles during a single round.
-pub type PlayerPiles {
-  PlayerPiles(
-    player: Player,
+pub type PlayerRound {
+  PlayerRound(
     color_tower: ColorTower,
     hand_pile: HandPile,
     side_pile: SidePile,
@@ -24,5 +23,5 @@ pub type PlayerPiles {
 }
 
 pub type Round {
-  Round(player_piles: List(PlayerPiles), scores: Scores)
+  Round(player_rounds: Dict(Player, PlayerRound))
 }
