@@ -4,7 +4,7 @@ import internal/card.{type Card}
 import internal/deck.{type Deck}
 import internal/naive_stack.{type NaiveStack}
 
-pub type MainPile {
+pub opaque type MainPile {
   MainPile(cards: NaiveStack(Card))
 }
 
