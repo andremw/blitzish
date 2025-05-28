@@ -44,7 +44,7 @@ pub fn places_card_when_empty_test() {
 
   let assert #(Some(card), deck_size) =
     deck
-    |> side_pile.new2
+    |> side_pile.new
     |> pair.map_second(deck.to_list)
     |> pair.map_second(list.length)
     |> pair.map_first(side_pile.get_top_card)
@@ -58,7 +58,7 @@ pub fn places_descending_card_test() {
 
   let pile =
     deck
-    |> side_pile.new2()
+    |> side_pile.new()
     |> pair.first
 
   let assert Some(first_card) = pile |> side_pile.get_top_card
@@ -86,7 +86,7 @@ pub fn does_not_place_ascending_card_test() {
 
   let pile =
     deck
-    |> side_pile.new2()
+    |> side_pile.new()
     |> pair.first
 
   let assert Some(first_card) = pile |> side_pile.get_top_card
@@ -110,7 +110,7 @@ pub fn does_not_place_same_gender_card_test() {
 
   let pile =
     deck
-    |> side_pile.new2()
+    |> side_pile.new()
     |> pair.first
 
   let assert Some(first_card) = pile |> side_pile.get_top_card
@@ -136,7 +136,7 @@ pub fn does_not_place_card_on_top_of_1_test() {
 
   let pile =
     deck
-    |> side_pile.new2
+    |> side_pile.new
     |> pair.first
 
   let assert Some(first_card) = pile |> side_pile.get_top_card

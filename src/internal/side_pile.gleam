@@ -9,11 +9,7 @@ pub opaque type SidePile {
   SidePile(cards: NaiveStack(Card))
 }
 
-pub fn new() {
-  SidePile(cards: naive_stack.from_list([]))
-}
-
-pub fn new2(deck: Deck) -> #(SidePile, Deck) {
+pub fn new(deck: Deck) -> #(SidePile, Deck) {
   deck
   |> deck.take(1)
   |> pair.map_first(naive_stack.from_list)
