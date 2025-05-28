@@ -130,14 +130,26 @@ pub fn does_not_place_same_gender_card_test() {
 }
 
 pub fn does_not_place_card_on_top_of_1_test() {
+  let deck =
+    deck.new(card.First)
+    // drop cards until we reach a number 1 card
+    |> drop_while(fn(n) { n != 1 })
+
   let pile =
-    side_pile.new()
-    |> place_card(Card(color: card.Blue, deck_design: card.First, number: 1))
-    |> result.try(place_card(
-      _,
-      Card(color: card.Yellow, deck_design: card.First, number: 0),
-    ))
+    deck
+    |> side_pile.new2
+    |> pair.first
+
+  let assert Some(first_card) = pile |> side_pile.get_top_card
+
+  let card =
+    Card(
+      ..first_card,
+      number: first_card.number - 1,
+      color: get_opposite_gender(first_card.color),
+    )
 
   pile
+  |> place_card(card)
   |> should.equal(Error(CantPlaceOver1))
 }
