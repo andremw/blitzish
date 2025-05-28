@@ -1,6 +1,8 @@
 import gleam/bool.{guard}
 import gleam/option
+import gleam/pair
 import internal/card.{type Card}
+import internal/deck.{type Deck}
 import internal/naive_stack.{type NaiveStack}
 
 pub opaque type SidePile {
@@ -9,6 +11,13 @@ pub opaque type SidePile {
 
 pub fn new() {
   SidePile(cards: naive_stack.from_list([]))
+}
+
+pub fn new2(deck: Deck) -> #(SidePile, Deck) {
+  deck
+  |> deck.take(1)
+  |> pair.map_first(naive_stack.from_list)
+  |> pair.map_first(SidePile)
 }
 
 pub type PlacementError {

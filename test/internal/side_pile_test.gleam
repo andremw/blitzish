@@ -1,7 +1,10 @@
+import gleam/list
 import gleam/option.{Some}
+import gleam/pair
 import gleam/result
 import gleeunit
 import internal/card.{Card}
+import internal/deck
 import internal/side_pile.{
   CantPlaceOver1, NotPreviousNumber, SameGender, get_top_card, place_card,
 }
@@ -13,16 +16,19 @@ pub fn main() {
 }
 
 pub fn places_card_when_empty_test() {
-  let card = Card(color: card.Blue, deck_design: card.First, number: 5)
+  let deck = deck.new(card.First)
 
-  let assert Ok(pile) =
-    side_pile.new()
-    |> place_card(card)
+  let assert Ok(first_card) = deck |> deck.to_list |> list.first
 
-  let assert Some(top_card) = get_top_card(pile)
+  let assert #(Some(card), deck_size) =
+    deck
+    |> side_pile.new2
+    |> pair.map_second(deck.to_list)
+    |> pair.map_second(list.length)
+    |> pair.map_first(side_pile.get_top_card)
 
-  top_card
-  |> should.equal(card)
+  #(card, deck_size)
+  |> should.equal(#(first_card, 39))
 }
 
 pub fn places_descending_card_test() {
