@@ -105,15 +105,27 @@ pub fn does_not_place_ascending_card_test() {
 }
 
 pub fn does_not_place_same_gender_card_test() {
+  let deck =
+    deck.new(card.First)
+    |> drop_while(fn(n) { n == 10 || n == 1 })
+
   let pile =
-    side_pile.new()
-    |> place_card(Card(color: card.Blue, deck_design: card.First, number: 5))
-    |> result.try(place_card(
-      _,
-      Card(color: card.Blue, deck_design: card.First, number: 4),
-    ))
+    deck
+    |> side_pile.new2()
+    |> pair.first
+
+  let assert Some(first_card) = pile |> side_pile.get_top_card
+
+  let ascending_card =
+    Card(
+      ..first_card,
+      number: first_card.number - 1,
+      color: first_card.color,
+      // using the same color
+    )
 
   pile
+  |> place_card(ascending_card)
   |> should.equal(Error(SameGender))
 }
 
