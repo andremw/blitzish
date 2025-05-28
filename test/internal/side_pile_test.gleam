@@ -1,7 +1,6 @@
 import gleam/list
 import gleam/option.{Some}
 import gleam/pair
-import gleam/result
 import gleeunit
 import internal/card.{Card}
 import internal/deck
