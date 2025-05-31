@@ -13,6 +13,15 @@ pub type Player {
   Player(deck_design: card.DeckDesign)
 }
 
+pub type Move {
+  TableToColorTower
+  TableToSidePile
+  SidePileToSidePile
+  SidePileToColorTower
+  MainPileToSidePile
+  MainPileToColorTower
+}
+
 pub type Score =
   Int
 
