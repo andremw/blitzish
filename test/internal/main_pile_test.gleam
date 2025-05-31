@@ -17,3 +17,14 @@ pub fn calculates_points_to_deduct_as_20_when_full_test() {
   |> main_pile.calculate_points_to_deduct()
   |> should.equal(20)
 }
+// pub fn takes_top_card_if_it_is_one_test() {
+//   todo
+// }
+
+// pub fn takes_no_card_if_it_is_not_one_test() {
+//   todo
+// }
+
+// pub fn returns_finished_pile_when_last_one_is_taken_test() {
+//   todo
+// }
