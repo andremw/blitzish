@@ -33,3 +33,16 @@ pub fn pile_becomes_main_pile_finished_when_last_one_is_taken_test() {
   |> result.map(main_pile.is_finished)
   |> should.equal(Ok(True))
 }
+
+pub fn plays_no_card_after_last_one_is_taken_test() {
+  let pile = deck.new(First) |> main_pile.new |> pair.first
+
+  // trying to play top cards more than 10 times results in Error(Nil)
+  list.range(1, 15)
+  |> list.fold(Ok(pile), fn(pile_result, _) {
+    pile_result
+    |> result.try(main_pile.play_top_card)
+    |> result.map(pair.second)
+  })
+  |> should.equal(Error(Nil))
+}
