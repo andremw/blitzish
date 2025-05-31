@@ -1,3 +1,4 @@
+import gleam/dict
 import gleam/list
 import gleam/option.{Some}
 import gleeunit
@@ -112,7 +113,7 @@ fn get_full_tower() {
 pub fn calculates_total_points_for_each_deck_design_test() {
   let tower = get_full_tower()
 
-  let totals = color_tower.calculate_total(tower)
+  let totals = color_tower.calculate_total(tower) |> dict.to_list
 
   totals
   |> should.equal([

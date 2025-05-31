@@ -67,5 +67,4 @@ pub fn calculate_total(tower: ColorTower) {
   naive_stack.to_list(tower.cards)
   |> list.group(fn(card) { card.deck_design })
   |> dict.map_values(fn(_design, cards) { list.length(cards) })
-  |> dict.to_list
 }
