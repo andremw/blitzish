@@ -22,7 +22,8 @@ pub fn places_card_when_empty_test() {
   let assert #(Some(card), _) =
     deck
     |> side_pile.new
-    |> pair.map_first(side_pile.get_top_card)
+    |> pair.first
+    |> side_pile.get_top_card
 
   card
   |> should.equal(first_card)
@@ -36,7 +37,7 @@ pub fn places_descending_card_test() {
     |> side_pile.new()
     |> pair.first
 
-  let assert Some(first_card) = pile |> side_pile.get_top_card
+  let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
   let descending_card =
     Card(
       ..first_card,
@@ -48,7 +49,7 @@ pub fn places_descending_card_test() {
     pile
     |> place_card(descending_card)
 
-  let assert Some(top_card) = get_top_card(pile)
+  let assert Some(top_card) = get_top_card(pile) |> pair.first
 
   top_card
   |> should.equal(descending_card)
@@ -64,7 +65,7 @@ pub fn does_not_place_ascending_card_test() {
     |> side_pile.new()
     |> pair.first
 
-  let assert Some(first_card) = pile |> side_pile.get_top_card
+  let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
 
   let ascending_card =
     Card(
@@ -88,7 +89,7 @@ pub fn does_not_place_same_gender_card_test() {
     |> side_pile.new()
     |> pair.first
 
-  let assert Some(first_card) = pile |> side_pile.get_top_card
+  let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
 
   let ascending_card =
     Card(
@@ -114,7 +115,7 @@ pub fn does_not_place_card_on_top_of_1_test() {
     |> side_pile.new
     |> pair.first
 
-  let assert Some(first_card) = pile |> side_pile.get_top_card
+  let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
 
   let card =
     Card(

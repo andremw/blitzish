@@ -23,7 +23,7 @@ pub type PlacementError {
 }
 
 pub fn place_card(pile: SidePile, card) {
-  let top_card = get_top_card(pile)
+  let #(top_card, _) = get_top_card(pile)
 
   case top_card {
     option.None -> naive_stack.from_list([card]) |> SidePile |> Ok
@@ -49,6 +49,7 @@ pub fn place_card(pile: SidePile, card) {
 }
 
 pub fn get_top_card(pile: SidePile) {
-  let #(_, top_card) = pile.cards |> naive_stack.pop
-  top_card
+  let #(remaining_stack, top_card) = pile.cards |> naive_stack.pop
+
+  #(top_card, SidePile(remaining_stack))
 }
