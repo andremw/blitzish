@@ -13,15 +13,14 @@ pub fn main() {
 }
 
 pub fn creates_shuffled_deck_with_40_cards_test() {
-  use design <- qcheck.given(generators.deck_design_generator())
-  let new_deck = deck.new(design)
+  use new_deck <- qcheck.given(generators.deck_generator())
 
   new_deck |> deck.to_list |> list.length |> should.equal(40)
 }
 
 pub fn creates_deck_with_10_cards_each_color_test() {
-  use design <- qcheck.given(generators.deck_design_generator())
-  let new_deck_list = deck.new(design) |> deck.to_list
+  use new_deck <- qcheck.given(generators.deck_generator())
+  let new_deck_list = new_deck |> deck.to_list
 
   let grouped_cards = new_deck_list |> list.group(fn(card) { card.color })
 
@@ -37,18 +36,16 @@ pub fn creates_deck_with_10_cards_each_color_test() {
 }
 
 pub fn all_cards_in_the_deck_are_between_1_and_10_test() {
-  use design <- qcheck.given(generators.deck_design_generator())
+  use new_deck <- qcheck.given(generators.deck_generator())
 
-  let new_deck_list = deck.new(design) |> deck.to_list
+  let new_deck_list = new_deck |> deck.to_list
 
   list.all(new_deck_list, fn(card) { card.number >= 1 && card.number <= 10 })
   |> should.be_true
 }
 
 pub fn remaining_deck_has_correct_size_after_taking_cards_test() {
-  use design <- qcheck.given(generators.deck_design_generator())
-
-  let first_deck = deck.new(design)
+  use first_deck <- qcheck.given(generators.deck_generator())
 
   let number_of_cards_to_take = 7
   let #(_, new_deck) = first_deck |> deck.take(number_of_cards_to_take)
