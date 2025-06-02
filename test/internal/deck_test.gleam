@@ -1,7 +1,7 @@
 import gleam/dict
 import gleam/list
 import gleeunit
-import internal/card.{First}
+import internal/card
 import internal/deck
 
 import gleeunit/should
@@ -20,7 +20,8 @@ pub fn creates_shuffled_deck_with_40_cards_test() {
 }
 
 pub fn creates_deck_with_10_cards_each_color_test() {
-  let new_deck_list = deck.new(First) |> deck.to_list
+  use design <- qcheck.given(generators.deck_design_generator())
+  let new_deck_list = deck.new(design) |> deck.to_list
 
   let grouped_cards = new_deck_list |> list.group(fn(card) { card.color })
 
