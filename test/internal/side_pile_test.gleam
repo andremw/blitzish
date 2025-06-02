@@ -45,6 +45,21 @@ pub fn the_top_card_is_always_one_less_than_the_card_below_test() {
   top_card.number |> should.equal(card_below.number - 1)
 }
 
+pub fn the_top_card_is_always_a_different_gender_from_the_card_below_test() {
+  use pile <- qcheck.given(generators.side_pile_with_cards_generator())
+
+  let assert #(Some(top_card), pile) =
+    pile
+    |> side_pile.get_top_card
+
+  let assert #(Some(card_below), _) =
+    pile
+    |> side_pile.get_top_card
+
+  card.get_gender(top_card.color)
+  |> should.not_equal(card.get_gender(card_below.color))
+}
+
 pub fn does_not_place_ascending_card_test() {
   let deck =
     deck.new(card.First)
@@ -57,11 +72,15 @@ pub fn does_not_place_ascending_card_test() {
 
   let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
 
+  use opposite_gender_color <- qcheck.given(
+    generators.opposite_gender_generator(first_card.color),
+  )
+
   let ascending_card =
     Card(
       ..first_card,
       number: first_card.number + 1,
-      color: get_opposite_gender(first_card.color),
+      color: opposite_gender_color,
     )
 
   pile
@@ -107,25 +126,20 @@ pub fn does_not_place_card_on_top_of_1_test() {
 
   let assert Some(first_card) = pile |> side_pile.get_top_card |> pair.first
 
+  use opposite_gender_color <- qcheck.given(
+    generators.opposite_gender_generator(first_card.color),
+  )
+
   let card =
     Card(
       ..first_card,
       number: first_card.number - 1,
-      color: get_opposite_gender(first_card.color),
+      color: opposite_gender_color,
     )
 
   pile
   |> place_card(card)
   |> should.equal(Error(CantPlaceOver1))
-}
-
-fn get_opposite_gender(color: card.Color) {
-  case color {
-    card.Blue -> card.Yellow
-    card.Green -> card.Red
-    card.Red -> card.Green
-    card.Yellow -> card.Blue
-  }
 }
 
 /// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able

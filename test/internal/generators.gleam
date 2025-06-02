@@ -85,7 +85,7 @@ pub fn tower_with_cards_generator() {
 }
 
 pub fn side_pile_with_cards_generator() {
-  use deck <- qcheck.map(deck_generator())
+  use deck <- qcheck.bind(deck_generator())
   let deck = deck |> drop_while(fn(n) { n == 1 })
   let #(pile, _) = side_pile.new(deck)
 
@@ -94,6 +94,9 @@ pub fn side_pile_with_cards_generator() {
   let assert #(Some(top_card), _) = pile |> side_pile.get_top_card
   let Card(color: top_card_color, deck_design: deck_design, number: number) =
     top_card
+  use opposite_gender_color <- qcheck.map(opposite_gender_generator(
+    top_card_color,
+  ))
 
   let assert Ok(pile) =
     // creating a list that goes from the top card's number to 1, like [3, 2, 1]
@@ -101,7 +104,9 @@ pub fn side_pile_with_cards_generator() {
     |> list.index_map(fn(number, index) {
       // alternating genders on every even index since 0
       let color = case int.is_even(index) {
-        True -> get_opposite_gender(top_card_color)
+        True -> {
+          opposite_gender_color
+        }
         False -> top_card_color
       }
 
@@ -126,11 +131,15 @@ fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
   }
 }
 
-fn get_opposite_gender(color: card.Color) {
-  case color {
-    card.Blue -> card.Yellow
-    card.Green -> card.Red
-    card.Red -> card.Green
-    card.Yellow -> card.Blue
+pub fn opposite_gender_generator(color: card.Color) {
+  case card.get_gender(color) {
+    card.Boy ->
+      qcheck.from_generators(qcheck.constant(card.Green), [
+        qcheck.constant(card.Yellow),
+      ])
+    card.Girl ->
+      qcheck.from_generators(qcheck.constant(card.Blue), [
+        qcheck.constant(card.Red),
+      ])
   }
 }
