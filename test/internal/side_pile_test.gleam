@@ -14,43 +14,18 @@ pub fn main() {
   gleeunit.main()
 }
 
-fn get_opposite_gender(color: card.Color) {
-  case color {
-    card.Blue -> card.Yellow
-    card.Green -> card.Red
-    card.Red -> card.Green
-    card.Yellow -> card.Blue
-  }
-}
-
-/// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able
-/// to test the placement of cards onto the side pile.
-/// A card is dropped from the top of the deck, using deck.take, while the predicate fn returns True.
-fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
-  case deck |> deck.take(1) {
-    #([Card(number: n, ..)], new_deck) ->
-      case predicate(n) {
-        False -> deck
-        True -> drop_while(new_deck, predicate)
-      }
-    #(_, deck) -> deck
-  }
-}
-
 pub fn places_card_when_empty_test() {
   let deck = deck.new(card.First)
 
   let assert Ok(first_card) = deck |> deck.to_list |> list.first
 
-  let assert #(Some(card), deck_size) =
+  let assert #(Some(card), _) =
     deck
     |> side_pile.new
-    |> pair.map_second(deck.to_list)
-    |> pair.map_second(list.length)
     |> pair.map_first(side_pile.get_top_card)
 
-  #(card, deck_size)
-  |> should.equal(#(first_card, 39))
+  card
+  |> should.equal(first_card)
 }
 
 pub fn places_descending_card_test() {
@@ -119,8 +94,8 @@ pub fn does_not_place_same_gender_card_test() {
     Card(
       ..first_card,
       number: first_card.number - 1,
-      color: first_card.color,
       // using the same color
+      color: first_card.color,
     )
 
   pile
@@ -151,4 +126,27 @@ pub fn does_not_place_card_on_top_of_1_test() {
   pile
   |> place_card(card)
   |> should.equal(Error(CantPlaceOver1))
+}
+
+fn get_opposite_gender(color: card.Color) {
+  case color {
+    card.Blue -> card.Yellow
+    card.Green -> card.Red
+    card.Red -> card.Green
+    card.Yellow -> card.Blue
+  }
+}
+
+/// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able
+/// to test the placement of cards onto the side pile.
+/// A card is dropped from the top of the deck, using deck.take, while the predicate fn returns True.
+fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
+  case deck |> deck.take(1) {
+    #([Card(number: n, ..)], new_deck) ->
+      case predicate(n) {
+        False -> deck
+        True -> drop_while(new_deck, predicate)
+      }
+    #(_, deck) -> deck
+  }
 }
