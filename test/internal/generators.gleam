@@ -60,3 +60,23 @@ pub fn full_tower_generator() {
 
   tower
 }
+
+/// returns a ColorTower with 1 to 9 cards placed
+pub fn tower_with_cards_generator() {
+  use #(_, color, deck_design), number <- qcheck.map2(
+    card_props_generator(),
+    qcheck.bounded_int(1, 9),
+  )
+
+  let tower = color_tower.new()
+
+  let assert Ok(tower) =
+    list.range(1, number)
+    // using positional args here for partial application of Card
+    |> list.map(Card(_, color, deck_design))
+    |> list.try_fold(from: tower, with: fn(tower, card) {
+      color_tower.place_card(tower, card)
+    })
+
+  tower
+}

@@ -1,5 +1,4 @@
 import gleam/dict
-import gleam/list
 import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
@@ -92,39 +91,23 @@ pub fn does_not_place_different_color_card_test() {
   |> should.equal(Error(ColorMismatch))
 }
 
-fn get_full_tower() {
+pub fn each_placed_card_adds_one_point_for_the_deck_design_test() {
+  use tower <- qcheck.given(generators.tower_with_cards_generator())
+
+  let assert Some(top_card) = tower |> color_tower.get_top_card
+
+  let assert Ok(previous_total) =
+    tower |> color_tower.calculate_total() |> dict.get(top_card.deck_design)
+
   let assert Ok(tower) =
-    [
-      Card(color: card.Blue, number: 1, deck_design: card.First),
-      Card(color: card.Blue, number: 2, deck_design: card.Second),
-      Card(color: card.Blue, number: 3, deck_design: card.Second),
-      Card(color: card.Blue, number: 4, deck_design: card.Second),
-      Card(color: card.Blue, number: 5, deck_design: card.Third),
-      Card(color: card.Blue, number: 6, deck_design: card.First),
-      Card(color: card.Blue, number: 7, deck_design: card.First),
-      Card(color: card.Blue, number: 8, deck_design: card.Fourth),
-      Card(color: card.Blue, number: 9, deck_design: card.Second),
-      Card(color: card.Blue, number: 10, deck_design: card.Second),
-    ]
-    |> list.try_fold(from: color_tower.new(), with: fn(tower, card) {
-      color_tower.place_card(tower, card)
-    })
+    tower
+    |> color_tower.place_card(Card(..top_card, number: top_card.number + 1))
 
-  tower
-}
+  let assert Ok(new_total) =
+    tower |> color_tower.calculate_total() |> dict.get(top_card.deck_design)
 
-pub fn calculates_total_points_for_each_deck_design_test() {
-  let tower = get_full_tower()
-
-  let totals = color_tower.calculate_total(tower) |> dict.to_list
-
-  totals
-  |> should.equal([
-    #(card.First, 3),
-    #(card.Second, 5),
-    #(card.Third, 1),
-    #(card.Fourth, 1),
-  ])
+  new_total
+  |> should.equal(previous_total + 1)
 }
 
 pub fn does_not_place_on_top_of_10_test() {
