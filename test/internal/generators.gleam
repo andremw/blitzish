@@ -1,7 +1,12 @@
+// not sure about how much logic I should put in here, but /shrug
+
+import gleam/int
 import gleam/list
+import gleam/option.{Some}
 import internal/card.{type DeckDesign, Card}
 import internal/color_tower
 import internal/deck.{type Deck}
+import internal/side_pile
 import qcheck
 
 pub fn deck_generator() -> qcheck.Generator(Deck) {
@@ -74,9 +79,58 @@ pub fn tower_with_cards_generator() {
     list.range(1, number)
     // using positional args here for partial application of Card
     |> list.map(Card(_, color, deck_design))
-    |> list.try_fold(from: tower, with: fn(tower, card) {
-      color_tower.place_card(tower, card)
-    })
+    |> list.try_fold(from: tower, with: color_tower.place_card)
 
   tower
+}
+
+pub fn side_pile_with_cards_generator() {
+  use deck <- qcheck.map(deck_generator())
+  let deck = deck |> drop_while(fn(n) { n == 1 })
+  let #(pile, _) = side_pile.new(deck)
+
+  // get the top card to make sure we place cards in descending order, starting from the
+  // number in the top card
+  let assert #(Some(top_card), _) = pile |> side_pile.get_top_card
+  let Card(color: top_card_color, deck_design: deck_design, number: number) =
+    top_card
+
+  let assert Ok(pile) =
+    // creating a list that goes from the top card's number to 1, like [3, 2, 1]
+    list.range(int.max(number - 1, 1), 1)
+    |> list.index_map(fn(number, index) {
+      // alternating genders on every even index since 0
+      let color = case int.is_even(index) {
+        True -> get_opposite_gender(top_card_color)
+        False -> top_card_color
+      }
+
+      Card(number, color, deck_design)
+    })
+    |> list.try_fold(from: pile, with: side_pile.place_card)
+
+  pile
+}
+
+/// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able
+/// to test the placement of cards onto the side pile.
+/// A card is dropped from the top of the deck, using deck.take, while the predicate fn returns True.
+fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
+  case deck |> deck.take(1) {
+    #([Card(number: n, ..)], new_deck) ->
+      case predicate(n) {
+        False -> deck
+        True -> drop_while(new_deck, predicate)
+      }
+    #(_, deck) -> deck
+  }
+}
+
+fn get_opposite_gender(color: card.Color) {
+  case color {
+    card.Blue -> card.Yellow
+    card.Green -> card.Red
+    card.Red -> card.Green
+    card.Yellow -> card.Blue
+  }
 }
