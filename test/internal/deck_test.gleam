@@ -5,13 +5,16 @@ import internal/card.{First}
 import internal/deck
 
 import gleeunit/should
+import internal/generators
+import qcheck
 
 pub fn main() {
   gleeunit.main()
 }
 
 pub fn creates_shuffled_deck_with_40_cards_test() {
-  let new_deck = deck.new(First)
+  use design <- qcheck.given(generators.deck_design_generator())
+  let new_deck = deck.new(design)
 
   new_deck |> deck.to_list |> list.length |> should.equal(40)
 }
