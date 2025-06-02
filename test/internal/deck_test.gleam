@@ -35,3 +35,12 @@ pub fn creates_deck_with_10_cards_each_color_test() {
   yellow_cards |> list.length |> should.equal(10)
   green_cards |> list.length |> should.equal(10)
 }
+
+pub fn all_cards_in_the_deck_are_between_1_and_10_test() {
+  use design <- qcheck.given(generators.deck_design_generator())
+
+  let new_deck_list = deck.new(design) |> deck.to_list
+
+  list.all(new_deck_list, fn(card) { card.number >= 1 && card.number <= 10 })
+  |> should.be_true
+}
