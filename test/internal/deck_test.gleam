@@ -44,3 +44,15 @@ pub fn all_cards_in_the_deck_are_between_1_and_10_test() {
   list.all(new_deck_list, fn(card) { card.number >= 1 && card.number <= 10 })
   |> should.be_true
 }
+
+pub fn remaining_deck_has_correct_size_after_taking_cards_test() {
+  use design <- qcheck.given(generators.deck_design_generator())
+
+  let first_deck = deck.new(design)
+
+  let number_of_cards_to_take = 7
+  let #(_, new_deck) = first_deck |> deck.take(number_of_cards_to_take)
+
+  deck.size(new_deck)
+  |> should.equal(deck.size(first_deck) - number_of_cards_to_take)
+}

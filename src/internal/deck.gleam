@@ -40,3 +40,7 @@ pub fn take(deck: Deck, number_of_cards: Int) -> #(List(card.Card), Deck) {
 pub fn to_list(deck: Deck) {
   deck.cards
 }
+
+pub fn size(deck: Deck) {
+  deck |> to_list |> list.length
+}
