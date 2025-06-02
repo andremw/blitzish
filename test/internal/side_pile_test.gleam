@@ -4,6 +4,7 @@ import gleam/pair
 import gleeunit
 import internal/card.{Card}
 import internal/deck
+import internal/deck_test_helpers
 import internal/generators
 import internal/side_pile.{
   CantPlaceOver1, NotPreviousNumber, SameGender, place_card,
@@ -63,7 +64,7 @@ pub fn the_top_card_is_always_a_different_gender_from_the_card_below_test() {
 pub fn does_not_place_ascending_card_test() {
   let deck =
     deck.new(card.First)
-    |> drop_while(fn(n) { n == 10 || n == 1 })
+    |> deck_test_helpers.drop_while(fn(n) { n == 10 || n == 1 })
 
   let pile =
     deck
@@ -91,7 +92,7 @@ pub fn does_not_place_ascending_card_test() {
 pub fn does_not_place_same_gender_card_test() {
   let deck =
     deck.new(card.First)
-    |> drop_while(fn(n) { n == 10 || n == 1 })
+    |> deck_test_helpers.drop_while(fn(n) { n == 10 || n == 1 })
 
   let pile =
     deck
@@ -117,7 +118,7 @@ pub fn does_not_place_card_on_top_of_1_test() {
   let deck =
     deck.new(card.First)
     // drop cards until we reach a number 1 card
-    |> drop_while(fn(n) { n != 1 })
+    |> deck_test_helpers.drop_while(fn(n) { n != 1 })
 
   let pile =
     deck
@@ -140,18 +141,4 @@ pub fn does_not_place_card_on_top_of_1_test() {
   pile
   |> place_card(card)
   |> should.equal(Error(CantPlaceOver1))
-}
-
-/// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able
-/// to test the placement of cards onto the side pile.
-/// A card is dropped from the top of the deck, using deck.take, while the predicate fn returns True.
-fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
-  case deck |> deck.take(1) {
-    #([Card(number: n, ..)], new_deck) ->
-      case predicate(n) {
-        False -> deck
-        True -> drop_while(new_deck, predicate)
-      }
-    #(_, deck) -> deck
-  }
 }

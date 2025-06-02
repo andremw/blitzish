@@ -6,6 +6,7 @@ import gleam/option.{Some}
 import internal/card.{type DeckDesign, Card}
 import internal/color_tower
 import internal/deck.{type Deck}
+import internal/deck_test_helpers
 import internal/side_pile
 import qcheck
 
@@ -86,7 +87,7 @@ pub fn tower_with_cards_generator() {
 
 pub fn side_pile_with_cards_generator() {
   use deck <- qcheck.bind(deck_generator())
-  let deck = deck |> drop_while(fn(n) { n == 1 })
+  let deck = deck |> deck_test_helpers.drop_while(fn(n) { n == 1 })
   let #(pile, _) = side_pile.new(deck)
 
   // get the top card to make sure we place cards in descending order, starting from the
@@ -115,20 +116,6 @@ pub fn side_pile_with_cards_generator() {
     |> list.try_fold(from: pile, with: side_pile.place_card)
 
   pile
-}
-
-/// Since the cards in the deck are shuffled, we need to drop a few cards from the deck in order to be able
-/// to test the placement of cards onto the side pile.
-/// A card is dropped from the top of the deck, using deck.take, while the predicate fn returns True.
-fn drop_while(deck: deck.Deck, predicate: fn(Int) -> Bool) {
-  case deck |> deck.take(1) {
-    #([Card(number: n, ..)], new_deck) ->
-      case predicate(n) {
-        False -> deck
-        True -> drop_while(new_deck, predicate)
-      }
-    #(_, deck) -> deck
-  }
 }
 
 pub fn opposite_gender_generator(color: card.Color) {
