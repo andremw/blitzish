@@ -26,3 +26,6 @@ pub fn all_players_start_round_with_minus_20_points_test() {
   |> result.all
   |> should.equal(Ok([-20, -20, -20, -20]))
 }
+// pub fn a_round_ends_when_a_player_has_75_points_or_more_test() {
+//   todo
+// }
