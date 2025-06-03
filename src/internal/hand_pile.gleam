@@ -18,13 +18,10 @@ pub opaque type HandPile {
 
 /// Creates a new hand pile as AllCardsInHand
 pub fn new(deck: Deck) -> #(HandPile, Deck) {
-  let #(main_pile, deck) =
-    deck
-    |> deck.take(27)
-    |> pair.map_first(naive_stack.from_list)
-    |> pair.map_first(AllCardsInHand)
-
-  #(main_pile, deck)
+  deck
+  |> deck.take(27)
+  |> pair.map_first(naive_stack.from_list)
+  |> pair.map_first(AllCardsInHand)
 }
 
 /// Turns up to three cards from the hand onto the table.
