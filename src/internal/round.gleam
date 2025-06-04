@@ -14,12 +14,13 @@ pub type Player {
 }
 
 pub type Move {
-  TableToColorTower
-  TableToSidePile
-  SidePileToSidePile
-  SidePileToColorTower
-  MainPileToSidePile
-  MainPileToColorTower
+  TurnHandCard
+  TableToColorTower(Int)
+  TableToSidePile(Int)
+  SidePileToSidePile(Int, Int)
+  SidePileToColorTower(Int)
+  MainPileToSidePile(Int)
+  MainPileToColorTower(Int)
 }
 
 pub type Score =
