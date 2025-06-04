@@ -51,3 +51,10 @@ pub fn is_finished(pile: MainPile) {
     MainPileFinished -> True
   }
 }
+
+pub fn to_list(pile: MainPile) {
+  case pile {
+    MainPile(cards) -> naive_stack.to_list(cards)
+    MainPileFinished -> []
+  }
+}

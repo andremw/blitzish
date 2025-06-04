@@ -53,3 +53,7 @@ pub fn get_top_card(pile: SidePile) {
 
   #(top_card, SidePile(remaining_stack))
 }
+
+pub fn to_list(pile: SidePile) {
+  naive_stack.to_list(pile.cards)
+}
