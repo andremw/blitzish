@@ -25,8 +25,12 @@ fn make_deck(design: DeckDesign) {
   |> list.append(yellow)
 }
 
-pub fn new(design: DeckDesign) {
-  make_deck(design) |> list.shuffle |> Deck
+pub fn new(design: DeckDesign) -> Deck {
+  make_deck(design) |> Deck
+}
+
+pub fn shuffle(deck: Deck) -> Deck {
+  deck.cards |> list.shuffle |> Deck
 }
 
 /// Returns a tuple of #(n cards taken from the front, new deck with n fewer cards)
