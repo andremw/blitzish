@@ -33,7 +33,8 @@ pub fn all_players_start_round_with_minus_20_points_test() {
 // not be able to find a card with number 1 (the one that starts the color tower). that's why all players need to be making
 // moves so the game can progress and eventually end.
 
-// pub fn a_round_ends_when_a_player_has_75_points_or_more_test() {
+// we're going to test this by making a move that empties the main pile
+// pub fn a_round_ends_when_a_player_plays_all_cards_from_the_main_pile_test() {
 //   todo
 // }
 
