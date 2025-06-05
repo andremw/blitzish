@@ -42,12 +42,17 @@ pub type Round {
   Round(color_tower: ColorTower, player_rounds: Dict(Player, PlayerRound))
 }
 
-pub fn new(player1, player2, player3, player4) -> Round {
+pub fn new(
+  player1: Player,
+  player2: Player,
+  player3: Player,
+  player4: Player,
+) -> Round {
   [
-    #(player1, card.First),
-    #(player2, card.Second),
-    #(player3, card.Third),
-    #(player4, card.Fourth),
+    #(player1, player1.deck_design),
+    #(player2, player2.deck_design),
+    #(player3, player3.deck_design),
+    #(player4, player4.deck_design),
   ]
   |> list.fold(dict.new(), fn(dict, player_design_pair) {
     let #(player, deck_design) = player_design_pair
@@ -58,7 +63,7 @@ pub fn new(player1, player2, player3, player4) -> Round {
 }
 
 fn prepare_round(deck_design) {
-  let player_deck = deck.new(deck_design)
+  let player_deck = deck.new(deck_design) |> deck.shuffle
 
   let #(side_piles, player_deck) = prepare_side_piles(player_deck)
   let #(main_pile, player_deck) = main_pile.new(player_deck)
