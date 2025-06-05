@@ -1,4 +1,5 @@
 import gleam/dict.{type Dict}
+import gleam/int
 import gleam/list
 import gleam/result
 import internal/card
@@ -39,7 +40,10 @@ pub type PlayerRound {
 }
 
 pub type Round {
-  Round(color_tower: ColorTower, player_rounds: Dict(Player, PlayerRound))
+  Round(
+    color_towers: List(ColorTower),
+    player_rounds: Dict(Player, PlayerRound),
+  )
 }
 
 pub fn new(
@@ -53,7 +57,7 @@ pub fn new(
     dict
     |> dict.insert(player, prepare_round(player.deck_design))
   })
-  |> Round(color_tower: color_tower.new())
+  |> Round(color_towers: [color_tower.new()])
 }
 
 fn prepare_round(deck_design) {
@@ -77,7 +81,13 @@ fn prepare_side_piles(player_deck) -> #(List(SidePile), Deck) {
 }
 
 pub fn calculate_points(round: Round) -> Dict(Player, Int) {
-  let color_tower_totals = color_tower.calculate_total(round.color_tower)
+  // let color_tower_totals = color_tower.calculate_total(round.color_tower)
+  let combine = fn(a, b) { dict.combine(a, b, int.add) }
+  let color_tower_totals =
+    round.color_towers
+    |> list.map(color_tower.calculate_total)
+    |> list.fold(dict.new(), combine)
+
   round.player_rounds
   |> dict.map_values(fn(player, player_round) {
     let color_tower_total =
