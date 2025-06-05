@@ -2,12 +2,12 @@ import gleam/int
 import gleam/list
 import gleam/pair
 import gleam/result
-import internal/generators
+import internal/generators/deck_generators.{deck}
 import internal/main_pile.{type MainPile}
 import qcheck.{type Generator}
 
 pub fn empty() -> Generator(MainPile) {
-  use deck <- qcheck.map(generators.deck_generator())
+  use deck <- qcheck.map(deck())
 
   deck
   |> main_pile.new
@@ -16,7 +16,7 @@ pub fn empty() -> Generator(MainPile) {
 }
 
 pub fn with_n_cards(n) -> Generator(MainPile) {
-  use deck <- qcheck.map(generators.deck_generator())
+  use deck <- qcheck.map(deck())
 
   deck
   |> main_pile.new

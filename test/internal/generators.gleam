@@ -5,16 +5,10 @@ import gleam/list
 import gleam/option.{Some}
 import internal/card.{type DeckDesign, Card}
 import internal/color_tower
-import internal/deck.{type Deck}
 import internal/deck_test_helpers
+import internal/generators/deck_generators.{deck}
 import internal/side_pile
 import qcheck
-
-pub fn deck_generator() -> qcheck.Generator(Deck) {
-  use design <- qcheck.map(deck_design_generator())
-
-  deck.new(design)
-}
 
 fn deck_design_generator() -> qcheck.Generator(DeckDesign) {
   qcheck.from_generators(qcheck.constant(card.First), [
@@ -86,7 +80,7 @@ pub fn tower_with_cards_generator() {
 }
 
 pub fn side_pile_with_cards_generator() {
-  use deck <- qcheck.bind(deck_generator())
+  use deck <- qcheck.bind(deck())
   let deck = deck |> deck_test_helpers.drop_while(fn(n) { n == 1 })
   let #(pile, _) = side_pile.new(deck)
 
