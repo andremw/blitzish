@@ -48,16 +48,10 @@ pub fn new(
   player3: Player,
   player4: Player,
 ) -> Round {
-  [
-    #(player1, player1.deck_design),
-    #(player2, player2.deck_design),
-    #(player3, player3.deck_design),
-    #(player4, player4.deck_design),
-  ]
-  |> list.fold(dict.new(), fn(dict, player_design_pair) {
-    let #(player, deck_design) = player_design_pair
+  [player1, player2, player3, player4]
+  |> list.fold(dict.new(), fn(dict, player) {
     dict
-    |> dict.insert(player, prepare_round(deck_design))
+    |> dict.insert(player, prepare_round(player.deck_design))
   })
   |> Round(color_tower: color_tower.new())
 }
