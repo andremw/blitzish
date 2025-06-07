@@ -57,3 +57,11 @@ pub fn get_top_card(pile: SidePile) {
 pub fn to_list(pile: SidePile) {
   naive_stack.to_list(pile.cards)
 }
+
+pub fn placement_error_to_string(error: PlacementError) {
+  case error {
+    CantPlaceOver1 -> "Cannot place on top of 1"
+    NotPreviousNumber -> "Cards must be placed in descending order"
+    SameGender -> "Genders need to be alternated"
+  }
+}

@@ -1,4 +1,4 @@
-import internal/generators/deck.{deck}
+import internal/generators/deck_generators.{deck}
 import internal/side_pile.{type SidePile}
 import qcheck.{type Generator}
 

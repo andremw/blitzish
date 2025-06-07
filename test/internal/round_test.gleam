@@ -3,10 +3,15 @@ import gleam/list
 import gleam/result
 import gleeunit
 import internal/card
+import internal/generators/hand_pile_generators
+import internal/generators/main_pile
+import internal/generators/player
+import internal/generators/side_pile_generators
+import qcheck
 
 import gleeunit/should
 
-import internal/round.{Player}
+import internal/round.{Ended, MainPileToSidePile, Player, PlayerRound, Running}
 
 pub fn main() {
   gleeunit.main()
@@ -26,6 +31,7 @@ pub fn all_players_start_round_with_minus_20_points_test() {
   |> result.all
   |> should.equal(Ok([-20, -20, -20, -20]))
 }
+
 // I'm wondering how I'm going to test this without cheating or creating a super complex test structure...
 // since the Deck is random, non-deterministic, I would need to write an "auto-play" module that plays the game,
 // making the moves for all players. that's because a single player might get stuck, without being able to
@@ -33,11 +39,24 @@ pub fn all_players_start_round_with_minus_20_points_test() {
 // not be able to find a card with number 1 (the one that starts the color tower). that's why all players need to be making
 // moves so the game can progress and eventually end.
 
-// we're going to test this by making a move that empties the main pile
-// pub fn a_round_ends_when_a_player_plays_all_cards_from_the_main_pile_test() {
-//   todo
-// }
+pub fn a_round_ends_when_a_player_plays_all_cards_from_the_main_pile_test() {
+  use #(player, main_pile, side_pile, hand_pile) <- qcheck.given(qcheck.tuple4(
+    player.player(),
+    main_pile.with_n_cards_played(9),
+    side_pile_generators.empty(),
+    hand_pile_generators.new(),
+  ))
+  let side_piles = [side_pile]
 
+  let player_round = PlayerRound(hand_pile:, main_pile:, side_piles:)
+
+  let a_round = Running([], dict.insert(dict.new(), player, player_round))
+
+  case a_round |> round.move(player, MainPileToSidePile(0)) {
+    Ok(Ended(color_towers: _, player_rounds: _)) -> should.be_true(True)
+    _ -> should.be_true(False)
+  }
+}
 // pub fn a_player_can_move_a_card_from_the_table_to_the_color_tower_test() {
 //   todo
 // }

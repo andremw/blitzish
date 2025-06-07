@@ -15,7 +15,7 @@ pub fn empty() -> Generator(MainPile) {
   |> play_n_cards(10)
 }
 
-pub fn with_n_cards(n) -> Generator(MainPile) {
+pub fn with_n_cards_played(n) -> Generator(MainPile) {
   use deck <- qcheck.map(deck())
 
   deck
